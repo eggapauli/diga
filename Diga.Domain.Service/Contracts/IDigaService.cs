@@ -9,9 +9,12 @@ using System.Threading.Tasks;
 
 namespace Diga.Domain.Service.Contracts
 {
-    [ServiceContract(Namespace = "http://diga.clc.fh-hagenberg/services")]
+    [ServiceContract(Namespace = "http://diga.clc.fh-hagenberg/services", CallbackContract = typeof(IDigaCallback))]
     public interface IDigaService
     {
+        [OperationContract]
+        void AddOptimizationTask(string key, OptimizationTask task);
+
         [OperationContract]
         OptimizationTask GetOptimizationTask(string key);
 

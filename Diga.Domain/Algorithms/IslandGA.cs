@@ -27,5 +27,17 @@ namespace Diga.Domain.Algorithms
         {
             this.Parameters = parameters;
         }
+
+        public Task CalculateAsync(IProblem problem)
+        {
+            // TODO implement
+            return Task.Delay(5000);
+        }
+
+        public IEnumerable<ISolution> ReleaseSolutionsForMigration()
+        {
+            // TODO implement
+            yield break;
+        }
     }
 }

@@ -42,11 +42,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contracts\IDigaCallback.cs" />
     <Compile Include="Contracts\IDigaService.cs" />
     <Compile Include="Converter.cs" />
     <Compile Include="DataContracts\Algorithms\AbstractAlgorithm.cs" />
     <Compile Include="DataContracts\Crossovers\AbstractCrossover.cs" />
     <Compile Include="DataContracts\ImmigrationReplacers\AbstractImmigrationReplacer.cs" />
+    <Compile Include="DataContracts\IterationData.cs" />
     <Compile Include="DataContracts\Mutators\AbstractMutator.cs" />
     <Compile Include="DataContracts\Parameters\AbstractParameters.cs" />
     <Compile Include="DataContracts\Problems\AbstractProblem.cs" />
@@ -61,7 +63,10 @@
     <Compile Include="DataContracts\OptimizationTask.cs" />
     <Compile Include="DataContracts\Solutions\TSPSolution.cs" />
     <Compile Include="DataContracts\ImmigrationReplacers\WorstReplacer.cs" />
+    <Compile Include="FaultContracts\TaskNotAddedFault.cs" />
+    <Compile Include="FaultContracts\TaskNotFoundFault.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StateManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DigaCallback.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -50,6 +51,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Diga.Domain.Contracts\Diga.Domain.Contracts.csproj">
+      <Project>{d628086f-4bf2-4f9b-a65d-ba96ad0253f6}</Project>
+      <Name>Diga.Domain.Contracts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Diga.Domain.Service\Diga.Domain.Service.csproj">
       <Project>{1608956a-8703-477e-a273-2008aac9c84e}</Project>
       <Name>Diga.Domain.Service</Name>

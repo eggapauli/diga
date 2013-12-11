@@ -12,5 +12,9 @@ namespace Diga.Domain.Contracts
         IParameters Parameters { get; }
 
         ISolution BestSolution { get; set; }
+
+        Task CalculateAsync(IProblem problem);
+
+        IEnumerable<ISolution> ReleaseSolutionsForMigration();
     }
 }
