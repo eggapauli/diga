@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{51724AB3-1012-4D12-8A79-9A4DEDAEA71C}</ProjectGuid>
+    <ProjectGuid>{1608956A-8703-477E-A273-2008AAC9C84E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Diga.Contracts</RootNamespace>
-    <AssemblyName>Diga.Contracts</AssemblyName>
+    <RootNamespace>Diga.Domain.Service</RootNamespace>
+    <AssemblyName>Diga.Domain.Service</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,7 +31,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -40,18 +42,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Optimization\IAlgorithm.cs" />
-    <Compile Include="Optimization\ICrossover.cs" />
-    <Compile Include="Optimization\IImmigrationReplacer.cs" />
-    <Compile Include="Optimization\IMutator.cs" />
-    <Compile Include="Optimization\IParameters.cs" />
-    <Compile Include="Optimization\IProblem.cs" />
-    <Compile Include="Optimization\ISelector.cs" />
-    <Compile Include="Optimization\ISolution.cs" />
+    <Compile Include="Contracts\IDigaService.cs" />
+    <Compile Include="Converter.cs" />
+    <Compile Include="DataContracts\Algorithms\AbstractAlgorithm.cs" />
+    <Compile Include="DataContracts\Crossovers\AbstractCrossover.cs" />
+    <Compile Include="DataContracts\ImmigrationReplacers\AbstractImmigrationReplacer.cs" />
+    <Compile Include="DataContracts\Mutators\AbstractMutator.cs" />
+    <Compile Include="DataContracts\Parameters\AbstractParameters.cs" />
+    <Compile Include="DataContracts\Problems\AbstractProblem.cs" />
+    <Compile Include="DataContracts\Selectors\AbstractSelector.cs" />
+    <Compile Include="DataContracts\Solutions\AbstractSolution.cs" />
+    <Compile Include="DataContracts\Selectors\BestSelector.cs" />
+    <Compile Include="DataContracts\Mutators\InversionManipulator.cs" />
+    <Compile Include="DataContracts\Algorithms\IslandGA.cs" />
+    <Compile Include="DataContracts\Parameters\IslandGAParameters.cs" />
+    <Compile Include="DataContracts\Crossovers\MaximalPreservativeCrossover.cs" />
+    <Compile Include="DataContracts\Problems\TSP.cs" />
+    <Compile Include="DataContracts\OptimizationTask.cs" />
+    <Compile Include="DataContracts\Solutions\TSPSolution.cs" />
+    <Compile Include="DataContracts\ImmigrationReplacers\WorstReplacer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\IDigaService.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -8,63 +8,24 @@ using System.Text;
 using System.Threading.Tasks;
 using Diga.Domain.Mutators;
 using Diga.Domain.Parameters;
-using Diga.Contracts.Optimization;
+using Diga.Domain.Contracts;
+using System.Runtime.Serialization;
 
 namespace Diga.Domain.Algorithms
 {
     public class IslandGA : IAlgorithm
     {
-        public IslandGA(IslandGAParameters parameters)
-        {
-            this.Parameters = parameters;
-        }
-
         public IParameters Parameters { get; set; }
 
         public ISolution BestSolution { get; set; }
 
-        #region Possible Parameters
-
-        public IEnumerable<ICrossover> Crossovers
+        public IslandGA()
         {
-            get
-            {
-                yield return new MaximalPreservativeCrossover();
-            }
         }
 
-        public IEnumerable<ISelector> EmigrantsSelectors
+        public IslandGA(IParameters parameters)
         {
-            get
-            {
-                yield return new BestSelector();
-            }
+            this.Parameters = parameters;
         }
-
-        public IEnumerable<IImmigrationReplacer> ImmigrationReplacers
-        {
-            get
-            {
-                yield return new WorstReplacer();
-            }
-        }
-
-        public IEnumerable<IMutator> Mutators
-        {
-            get
-            {
-                yield return new InversionManipulator();
-            }
-        }
-
-        public IEnumerable<ISelector> Selectors
-        {
-            get
-            {
-                yield return new BestSelector();
-            }
-        }
-
-        #endregion
     }
 }

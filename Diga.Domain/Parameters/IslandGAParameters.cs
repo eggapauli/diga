@@ -1,7 +1,8 @@
-﻿using Diga.Contracts.Optimization;
+﻿using Diga.Domain.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,13 +10,13 @@ namespace Diga.Domain.Parameters
 {
     public class IslandGAParameters : IParameters
     {
-        public string Crossover { get; set; }
+        public ICrossover Crossover { get; set; }
 
         public int Elites { get; set; }
 
-        public string EmigrantsSelector { get; set; }
+        public ISelector EmigrantsSelector { get; set; }
 
-        public string ImmigrationReplacer { get; set; }
+        public IImmigrationReplacer ImmigrationReplacer { get; set; }
 
         public int MaximumGenerations { get; set; }
 
@@ -25,14 +26,48 @@ namespace Diga.Domain.Parameters
 
         public double MutationProbability { get; set; }
 
-        public string Mutator { get; set; }
+        public IMutator Mutator { get; set; }
 
         public int PopulationSize { get; set; }
 
         public int Seed { get; set; }
 
-        public string Selector { get; set; }
+        public ISelector Selector { get; set; }
 
         public bool SetSeedRandomly { get; set; }
+
+        public IslandGAParameters()
+        {
+        }
+
+        public IslandGAParameters(
+            ICrossover crossover,
+            int elites,
+            ISelector emigrantsSelector,
+            IImmigrationReplacer immigrationReplacer,
+            int maximumGenerations,
+            int migrationInterval,
+            int migrationRate,
+            double mutationProbability,
+            IMutator mutator,
+            int populationSize,
+            int seed,
+            ISelector selector,
+            bool setSeedRandomly)
+        {
+            Crossover = crossover;
+            Elites = elites;
+            EmigrantsSelector = emigrantsSelector;
+            ImmigrationReplacer = immigrationReplacer;
+            MaximumGenerations = maximumGenerations;
+            MigrationInterval = migrationInterval;
+            MigrationRate = migrationRate;
+            MutationProbability = mutationProbability;
+            Mutator = mutator;
+            PopulationSize = populationSize;
+            Seed = seed;
+            Selector = selector;
+            SetSeedRandomly = setSeedRandomly;
+        }
     }
 }

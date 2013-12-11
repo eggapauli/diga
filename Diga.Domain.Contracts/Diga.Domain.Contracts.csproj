@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{588C1A75-BD6A-4197-86AC-C6B9FD2927A1}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{D628086F-4BF2-4F9B-A65D-BA96AD0253F6}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Diga.Client</RootNamespace>
-    <AssemblyName>Diga.Client</AssemblyName>
+    <RootNamespace>Diga.Domain.Contracts</RootNamespace>
+    <AssemblyName>Diga.Domain.Contracts</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -34,8 +32,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,21 +39,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="IAlgorithm.cs" />
+    <Compile Include="ICrossover.cs" />
+    <Compile Include="IImmigrationReplacer.cs" />
+    <Compile Include="IMutator.cs" />
+    <Compile Include="IOptimizationTask.cs" />
+    <Compile Include="IParameters.cs" />
+    <Compile Include="IProblem.cs" />
+    <Compile Include="ISelector.cs" />
+    <Compile Include="ISolution.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Diga.Domain.Service\Diga.Domain.Service.csproj">
-      <Project>{1608956a-8703-477e-a273-2008aac9c84e}</Project>
-      <Name>Diga.Domain.Service</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Diga.Domain\Diga.Domain.csproj">
-      <Project>{201a0228-1349-4daf-aaf9-e0a22028c484}</Project>
-      <Name>Diga.Domain</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

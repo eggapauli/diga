@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithms\IslandGA.cs" />
+    <Compile Include="OptimizationTask.cs" />
     <Compile Include="Parameters\IslandGAParameters.cs" />
     <Compile Include="Crossovers\MaximalPreservativeCrossover.cs" />
     <Compile Include="Problems\TSP.cs" />
@@ -50,11 +51,12 @@
     <Compile Include="Solution\TSPSolution.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Diga.Contracts\Diga.Contracts.csproj">
-      <Project>{51724ab3-1012-4d12-8a79-9a4dedaea71c}</Project>
-      <Name>Diga.Contracts</Name>
+    <ProjectReference Include="..\Diga.Domain.Contracts\Diga.Domain.Contracts.csproj">
+      <Project>{d628086f-4bf2-4f9b-a65d-ba96ad0253f6}</Project>
+      <Name>Diga.Domain.Contracts</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
