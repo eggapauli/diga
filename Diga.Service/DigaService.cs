@@ -20,31 +20,47 @@ namespace Diga.Service
         ConcurrencyMode = ConcurrencyMode.Reentrant)]
     public class DigaService : IDigaService
     {
-        public void AddOptimizationTask(string key, OptimizationTask task)
+        public void AddOptimizationTask(string taskKey, OptimizationTask task)
         {
-            if (!StateManager.Current.AddTask(key, task)) {
+            if (!StateManager.Instance.AddTask(taskKey, task)) {
                 throw new FaultException<TaskNotAddedFault>(new TaskNotAddedFault());
             }
         }
 
-        public OptimizationTask GetOptimizationTask(string key)
+        public OptimizationTask GetOptimizationTask(string taskKey)
         {
-            var task = StateManager.Current.GetTask(key);
+            var task = StateManager.Instance.GetTask(taskKey);
             if (task == null) {
                 throw new FaultException<TaskNotFoundFault>(new TaskNotFoundFault());
             }
 
             var channel = OperationContext.Current.GetCallbackChannel<IDigaCallback>();
-            StateManager.Current.AddWorker(key, channel);
+            StateManager.Instance.AddWorker(taskKey, channel);
             return task;
         }
 
-        public void Migrate(string key, IEnumerable<AbstractSolution> solutions)
+        public void Migrate(string taskKey, IEnumerable<AbstractSolution> solutions)
         {
-            // TODO implement migration strategy
-            // TODO decrease remaining iterations (StateManager)
-            var channel = OperationContext.Current.GetCallbackChannel<IDigaCallback>();
-            channel.Migrate(key, new IterationData(10, solutions));
+            var channel = OperationContext.Current.GetCallbackChannel<IDigaCallback>(); 
+
+            var task = StateManager.Instance.GetTask(taskKey);
+            task.Algorithm.Migrations++;
+
+            if (task.Algorithm.Migrations == task.Algorithm.Parameters.MaximumMigrations) {
+                channel.Finish();
+            }
+            else {
+                // TODO implement migration strategy
+                Task.Delay(1000).ContinueWith(_ =>
+                {
+                    channel.Migrate(solutions);
+                });
+            }
+        }
+
+        public void SetResult(string taskKey, AbstractSolution bestSolution)
+        {
+            // TODO update best solution
         }
     }
 }

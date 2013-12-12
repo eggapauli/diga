@@ -42,6 +42,7 @@
     <Compile Include="IAlgorithm.cs" />
     <Compile Include="ICrossover.cs" />
     <Compile Include="IImmigrationReplacer.cs" />
+    <Compile Include="IMigrator.cs" />
     <Compile Include="IMutator.cs" />
     <Compile Include="IOptimizationTask.cs" />
     <Compile Include="IParameters.cs" />

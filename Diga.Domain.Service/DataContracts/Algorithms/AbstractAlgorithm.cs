@@ -17,5 +17,8 @@ namespace Diga.Domain.Service.DataContracts.Algorithms
 
         [DataMember]
         public AbstractSolution BestSolution { get; set; }
+
+        [DataMember]
+        public int Migrations { get; set; }
     }
 }

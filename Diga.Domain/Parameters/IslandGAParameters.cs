@@ -18,11 +18,13 @@ namespace Diga.Domain.Parameters
 
         public IImmigrationReplacer ImmigrationReplacer { get; set; }
 
-        public int MaximumGenerations { get; set; }
+        public int MaximumMigrations { get; set; }
 
         public int MigrationInterval { get; set; }
 
         public int MigrationRate { get; set; }
+
+        public IMigrator Migrator { get; set; }
 
         public double MutationProbability { get; set; }
 
@@ -45,9 +47,10 @@ namespace Diga.Domain.Parameters
             int elites,
             ISelector emigrantsSelector,
             IImmigrationReplacer immigrationReplacer,
-            int maximumGenerations,
+            int maximumMigrations,
             int migrationInterval,
             int migrationRate,
+            IMigrator migrator,
             double mutationProbability,
             IMutator mutator,
             int populationSize,
@@ -59,9 +62,10 @@ namespace Diga.Domain.Parameters
             Elites = elites;
             EmigrantsSelector = emigrantsSelector;
             ImmigrationReplacer = immigrationReplacer;
-            MaximumGenerations = maximumGenerations;
+            MaximumMigrations = maximumMigrations;
             MigrationInterval = migrationInterval;
             MigrationRate = migrationRate;
+            Migrator = migrator;
             MutationProbability = mutationProbability;
             Mutator = mutator;
             PopulationSize = populationSize;

@@ -11,24 +11,20 @@ using Diga.Domain.Service.FaultContracts;
 using System.Threading;
 using Diga.Domain.Service.DataContracts.Solutions;
 using Diga.Domain.Service.DataContracts;
+using Diga.Domain.Service.Contracts;
 
 namespace Diga.Client
 {
     class Program
     {
-        private static DigaCallback callback;
-        private static TaskCompletionSource<IterationData> tcs;
-
         static void Main(string[] args)
         {
-            // TODO search for better solution with tcs
-            callback = new DigaCallback();
-            callback.OnMigrate += (key, iterationData) => tcs.SetResult(iterationData);
+            DigaCallback digaCallback = new DigaCallback();
 
-            using (var channelFactory = new DuplexChannelFactory<Svc.Contracts.IDigaService>(new InstanceContext(callback), "DigaService_DualHttpEndpoint")) {
+            using (var channelFactory = new DuplexChannelFactory<Svc.Contracts.IDigaService>(new InstanceContext(digaCallback), "DigaService_DualHttpEndpoint")) {
                 var digaService = channelFactory.CreateChannel();
 
-                var parameters = new Domain.Parameters.IslandGAParameters(new Domain.Crossovers.MaximalPreservativeCrossover(), 1, new Domain.Selectors.BestSelector(), new Domain.ImmigrationReplacers.WorstReplacer(), 100, 5, 2, 0.1, new Domain.Mutators.InversionManipulator(), 500, 0, new Domain.Selectors.BestSelector(), true);
+                var parameters = new Domain.Parameters.IslandGAParameters(new Domain.Crossovers.MaximalPreservativeCrossover(), 1, new Domain.Selectors.BestSelector(), new Domain.ImmigrationReplacers.WorstReplacer(), 5, 50, 2, new Domain.Migrators.UnidirectionalRingMigrator(), 0.1, new Domain.Mutators.InversionManipulator(), 500, 0, new Domain.Selectors.BestSelector(), true);
                 var task = new Domain.OptimizationTask(new Domain.Problems.TSP(), new Domain.Algorithms.IslandGA(parameters));
                 string taskKey = "SampleTSPProblem";
 
@@ -40,29 +36,31 @@ namespace Diga.Client
                     Console.Error.WriteLine("The task couldn't be added.");
                 }
 
-                Calculate(digaService, taskKey).Wait();
+                CalculateAsync(digaService, digaCallback, taskKey).Wait();
             }
         }
 
-        private static async Task Calculate(Svc.Contracts.IDigaService digaService, string taskKey)
+        private static async Task CalculateAsync(Svc.Contracts.IDigaService digaService, IDigaCallback digaCallback, string taskKey)
         {
             try {
                 var taskData = digaService.GetOptimizationTask("SampleTSPProblem");
                 Domain.OptimizationTask task = (Domain.OptimizationTask)Svc.Converter.ConvertFromServiceToDomain(taskData);
 
-                IterationData iterationData;
+                Console.WriteLine("Started calculating {0}.", taskKey);
                 int iterationNumber = 1;
                 do {
                     Console.WriteLine("Starting iteration {0}.", iterationNumber);
                     await task.Algorithm.CalculateAsync(task.Problem);
-                    var solutions = task.Algorithm.ReleaseSolutionsForMigration();
-                    var solutionData = solutions.Select(s => (AbstractSolution)Svc.Converter.ConvertFromDomainToService(solutions));
+                    var emigrants = task.Algorithm.ReleaseEmigrants();
+                    var solutionData = emigrants.Select(solution => (AbstractSolution)Svc.Converter.ConvertFromDomainToService(solution));
 
-                    tcs = new TaskCompletionSource<IterationData>();
                     digaService.Migrate(taskKey, solutionData);
-                    iterationData = await tcs.Task;
+                    var immigrants = await digaCallback.WaitForMigrationAsync();
+                    task.Algorithm.AddImmigrants(immigrants.Select(solution => (Domain.Contracts.ISolution)Svc.Converter.ConvertFromServiceToDomain(solution)));
                     iterationNumber++;
-                } while (iterationData.RemainingIterations > 0);
+                } while (!digaCallback.FinishToken.IsCancellationRequested);
+
+                digaService.SetResult(taskKey, (AbstractSolution)Svc.Converter.ConvertFromDomainToService(task.Algorithm.BestSolution));
 
                 Console.WriteLine("Finished calculating {0}.", taskKey);
             }

@@ -1,5 +1,6 @@
 ﻿using Diga.Domain.Service.DataContracts.Crossovers;
 using Diga.Domain.Service.DataContracts.ImmigrationReplacers;
+using Diga.Domain.Service.DataContracts.Migrators;
 using Diga.Domain.Service.DataContracts.Mutators;
 using Diga.Domain.Service.DataContracts.Selectors;
 using System;
@@ -27,13 +28,13 @@ namespace Diga.Domain.Service.DataContracts.Parameters
         public AbstractImmigrationReplacer ImmigrationReplacer { get; set; }
 
         [DataMember]
-        public int MaximumGenerations { get; set; }
-
-        [DataMember]
         public int MigrationInterval { get; set; }
 
         [DataMember]
         public int MigrationRate { get; set; }
+
+        [DataMember]
+        public AbstractMigrator Migrator { get; set; }
 
         [DataMember]
         public double MutationProbability { get; set; }

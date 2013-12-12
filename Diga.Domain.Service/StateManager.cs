@@ -11,7 +11,7 @@ namespace Diga.Domain.Service
 {
     public class StateManager
     {
-        private static Lazy<StateManager> current = new Lazy<StateManager>(() => new StateManager());
+        private static Lazy<StateManager> instance = new Lazy<StateManager>(() => new StateManager());
 
         private ConcurrentDictionary<string, OptimizationTask> tasks =
             new ConcurrentDictionary<string, OptimizationTask>();
@@ -19,9 +19,9 @@ namespace Diga.Domain.Service
         private ConcurrentDictionary<string, ConcurrentBag<IDigaCallback>> workers =
             new ConcurrentDictionary<string, ConcurrentBag<IDigaCallback>>();
 
-        public static StateManager Current
+        public static StateManager Instance
         {
-            get { return current.Value; }
+            get { return instance.Value; }
         }
 
         public bool AddTask(string key, OptimizationTask task)

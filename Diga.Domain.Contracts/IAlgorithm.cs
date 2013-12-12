@@ -13,8 +13,12 @@ namespace Diga.Domain.Contracts
 
         ISolution BestSolution { get; set; }
 
+        int Migrations { get; set; }
+
         Task CalculateAsync(IProblem problem);
 
-        IEnumerable<ISolution> ReleaseSolutionsForMigration();
+        IEnumerable<ISolution> ReleaseEmigrants();
+
+        void AddImmigrants(IEnumerable<ISolution> immigrants);
     }
 }

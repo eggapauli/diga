@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace Diga.Domain.Service.DataContracts.Parameters
+namespace Diga.Domain.Service.DataContracts.Migrators
 {
     [DataContract(Namespace = "http://diga.clc.fh-hagenberg/datacontracts")]
-    [KnownType(typeof(IslandGAParameters))]
-    public class AbstractParameters
+    [KnownType(typeof(UnidirectionalRingMigrator))]
+    public class AbstractMigrator
     {
-        [DataMember]
-        public int MaximumMigrations { get; set; }
     }
 }

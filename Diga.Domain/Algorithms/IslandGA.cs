@@ -19,6 +19,8 @@ namespace Diga.Domain.Algorithms
 
         public ISolution BestSolution { get; set; }
 
+        public int Migrations { get; set; }
+
         public IslandGA()
         {
         }
@@ -34,10 +36,15 @@ namespace Diga.Domain.Algorithms
             return Task.Delay(5000);
         }
 
-        public IEnumerable<ISolution> ReleaseSolutionsForMigration()
+        public IEnumerable<ISolution> ReleaseEmigrants()
         {
             // TODO implement
             yield break;
+        }
+
+        public void AddImmigrants(IEnumerable<ISolution> immigrants)
+        {
+            // TODO implement
         }
     }
 }

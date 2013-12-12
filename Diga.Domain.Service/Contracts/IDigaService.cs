@@ -13,12 +13,15 @@ namespace Diga.Domain.Service.Contracts
     public interface IDigaService
     {
         [OperationContract]
-        void AddOptimizationTask(string key, OptimizationTask task);
+        void AddOptimizationTask(string taskKey, OptimizationTask task);
 
         [OperationContract]
-        OptimizationTask GetOptimizationTask(string key);
+        OptimizationTask GetOptimizationTask(string taskKey);
 
         [OperationContract]
-        void Migrate(string key, IEnumerable<AbstractSolution> solutions);
+        void Migrate(string taskKey, IEnumerable<AbstractSolution> solutions);
+
+        [OperationContract]
+        void SetResult(string taskKey, AbstractSolution bestSolution);
     }
 }
