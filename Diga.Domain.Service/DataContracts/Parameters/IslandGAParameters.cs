@@ -1,14 +1,11 @@
 ﻿using Diga.Domain.Service.DataContracts.Crossovers;
+using Diga.Domain.Service.DataContracts.Evaluators;
 using Diga.Domain.Service.DataContracts.ImmigrationReplacers;
 using Diga.Domain.Service.DataContracts.Migrators;
 using Diga.Domain.Service.DataContracts.Mutators;
 using Diga.Domain.Service.DataContracts.Selectors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Diga.Domain.Service.DataContracts.SolutionCreators;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Diga.Domain.Service.DataContracts.Parameters
 {
@@ -25,13 +22,16 @@ namespace Diga.Domain.Service.DataContracts.Parameters
         public AbstractSelector EmigrantsSelector { get; set; }
 
         [DataMember]
+        public AbstractEvaluator Evaluator { get; set; }
+
+        [DataMember]
         public AbstractImmigrationReplacer ImmigrationReplacer { get; set; }
 
         [DataMember]
         public int MigrationInterval { get; set; }
 
         [DataMember]
-        public int MigrationRate { get; set; }
+        public double MigrationRate { get; set; }
 
         [DataMember]
         public AbstractMigrator Migrator { get; set; }
@@ -53,5 +53,8 @@ namespace Diga.Domain.Service.DataContracts.Parameters
 
         [DataMember]
         public bool SetSeedRandomly { get; set; }
+
+        [DataMember]
+        public AbstractSolutionCreator SolutionCreator { get; set; }
     }
 }

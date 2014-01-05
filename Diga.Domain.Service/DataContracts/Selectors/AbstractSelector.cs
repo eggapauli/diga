@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
+﻿using System.Runtime.Serialization;
 
 namespace Diga.Domain.Service.DataContracts.Selectors
 {
     [DataContract(Namespace = "http://diga.clc.fh-hagenberg/datacontracts")]
     [KnownType(typeof(BestSelector))]
-    public class AbstractSelector
+    public abstract class AbstractSelector
     {
     }
 }

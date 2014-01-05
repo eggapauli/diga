@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
+﻿using System.Runtime.Serialization;
 
 namespace Diga.Domain.Service.DataContracts.Problems
 {
     [DataContract(Namespace = "http://diga.clc.fh-hagenberg/datacontracts")]
     [KnownType(typeof(TSP))]
-    public class AbstractProblem
+    public abstract class AbstractProblem
     {
+        [DataMember]
+        public bool Maximization { get; set; }
     }
 }

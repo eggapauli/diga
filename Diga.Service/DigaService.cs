@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Diga.Domain.Service;
 using Diga.Domain.Service.Contracts;
 using Diga.Domain.Service.DataContracts;
-using Diga.Domain.Crossovers;
-using Diga.Domain.Selectors;
-using Diga.Domain.ImmigrationReplacers;
-using Diga.Domain.Mutators;
-using Diga.Domain.Service;
 using Diga.Domain.Service.DataContracts.Solutions;
 using Diga.Domain.Service.FaultContracts;
+using System.Collections.Generic;
+using System.ServiceModel;
+using System.Threading.Tasks;
 
 namespace Diga.Service
 {
@@ -22,7 +15,8 @@ namespace Diga.Service
     {
         public void AddOptimizationTask(string taskKey, OptimizationTask task)
         {
-            if (!StateManager.Instance.AddTask(taskKey, task)) {
+            if (!StateManager.Instance.AddTask(taskKey, task))
+            {
                 throw new FaultException<TaskNotAddedFault>(new TaskNotAddedFault());
             }
         }
@@ -30,7 +24,8 @@ namespace Diga.Service
         public OptimizationTask GetOptimizationTask(string taskKey)
         {
             var task = StateManager.Instance.GetTask(taskKey);
-            if (task == null) {
+            if (task == null)
+            {
                 throw new FaultException<TaskNotFoundFault>(new TaskNotFoundFault());
             }
 
@@ -41,20 +36,19 @@ namespace Diga.Service
 
         public void Migrate(string taskKey, IEnumerable<AbstractSolution> solutions)
         {
-            var channel = OperationContext.Current.GetCallbackChannel<IDigaCallback>(); 
+            var channel = OperationContext.Current.GetCallbackChannel<IDigaCallback>();
 
             var task = StateManager.Instance.GetTask(taskKey);
             task.Algorithm.Migrations++;
 
-            if (task.Algorithm.Migrations == task.Algorithm.Parameters.MaximumMigrations) {
+            if (task.Algorithm.Migrations == task.Algorithm.Parameters.MaximumMigrations)
+            {
                 channel.Finish();
             }
-            else {
+            else
+            {
                 // TODO implement migration strategy
-                Task.Delay(1000).ContinueWith(_ =>
-                {
-                    channel.Migrate(solutions);
-                });
+                Task.Delay(1000).ContinueWith(_ => channel.Migrate(solutions));
             }
         }
 

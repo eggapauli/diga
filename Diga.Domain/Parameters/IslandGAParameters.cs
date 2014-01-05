@@ -1,10 +1,5 @@
 ﻿using Diga.Domain.Contracts;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Diga.Domain.Parameters
 {
@@ -16,13 +11,15 @@ namespace Diga.Domain.Parameters
 
         public ISelector EmigrantsSelector { get; set; }
 
+        public IEvaluator Evaluator { get; set; }
+
         public IImmigrationReplacer ImmigrationReplacer { get; set; }
 
         public int MaximumMigrations { get; set; }
 
         public int MigrationInterval { get; set; }
 
-        public int MigrationRate { get; set; }
+        public double MigrationRate { get; set; }
 
         public IMigrator Migrator { get; set; }
 
@@ -32,11 +29,15 @@ namespace Diga.Domain.Parameters
 
         public int PopulationSize { get; set; }
 
+        public Random Random { get; set; }
+
         public int Seed { get; set; }
 
         public ISelector Selector { get; set; }
 
         public bool SetSeedRandomly { get; set; }
+
+        public ISolutionCreator SolutionCreator { get; set; }
 
         public IslandGAParameters()
         {
@@ -46,21 +47,24 @@ namespace Diga.Domain.Parameters
             ICrossover crossover,
             int elites,
             ISelector emigrantsSelector,
+            IEvaluator evaluator,
             IImmigrationReplacer immigrationReplacer,
             int maximumMigrations,
             int migrationInterval,
-            int migrationRate,
+            double migrationRate,
             IMigrator migrator,
             double mutationProbability,
             IMutator mutator,
             int populationSize,
             int seed,
             ISelector selector,
-            bool setSeedRandomly)
+            bool setSeedRandomly,
+            ISolutionCreator solutionCreator)
         {
             Crossover = crossover;
             Elites = elites;
             EmigrantsSelector = emigrantsSelector;
+            Evaluator = evaluator;
             ImmigrationReplacer = immigrationReplacer;
             MaximumMigrations = maximumMigrations;
             MigrationInterval = migrationInterval;
@@ -69,9 +73,11 @@ namespace Diga.Domain.Parameters
             MutationProbability = mutationProbability;
             Mutator = mutator;
             PopulationSize = populationSize;
+            Random = setSeedRandomly ? new Random() : new Random(Seed);
             Seed = seed;
             Selector = selector;
             SetSeedRandomly = setSeedRandomly;
+            SolutionCreator = solutionCreator;
         }
     }
 }
