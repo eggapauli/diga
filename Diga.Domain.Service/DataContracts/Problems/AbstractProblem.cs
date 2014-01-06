@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
+﻿using System.Runtime.Serialization;
 
 namespace Diga.Domain.Service.DataContracts.Problems
 {
@@ -10,6 +6,7 @@ namespace Diga.Domain.Service.DataContracts.Problems
     [KnownType(typeof(TSP))]
     public abstract class AbstractProblem
     {
-        public abstract bool Maximization { get; }
+        [DataMember]
+        public bool Maximization { get; set; }
     }
 }

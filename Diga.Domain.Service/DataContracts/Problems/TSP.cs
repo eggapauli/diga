@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.Serialization;
 
 namespace Diga.Domain.Service.DataContracts.Problems
 {
@@ -11,9 +6,6 @@ namespace Diga.Domain.Service.DataContracts.Problems
     public class TSP : AbstractProblem
     {
         [DataMember]
-        public override bool Maximization
-        {
-            get { return false; }
-        }
+        public double[][] Coordinates { get; set; }
     }
 }

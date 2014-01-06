@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
 
 namespace Diga.Domain.Service.DataContracts.Parameters
 {
@@ -10,6 +7,9 @@ namespace Diga.Domain.Service.DataContracts.Parameters
     [KnownType(typeof(IslandGAParameters))]
     public abstract class AbstractParameters
     {
+        [DataMember]
+        public Random Random { get; set; }
+
         [DataMember]
         public int MaximumMigrations { get; set; }
     }

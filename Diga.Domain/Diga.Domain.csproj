@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithms\IslandGA.cs" />
+    <Compile Include="Evaluators\TSPSolutionEvaluator.cs" />
     <Compile Include="Migrators\UnidirectionalRingMigrator.cs" />
     <Compile Include="OptimizationTask.cs" />
     <Compile Include="Parameters\IslandGAParameters.cs" />
@@ -50,7 +51,7 @@
     <Compile Include="Mutators\InversionManipulator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Solutions\TSPSolution.cs" />
-  </ItemGroup>
+    <Compile Include="SolutionCreators\RandomTSPSolutionCreator.cs" />  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Diga.Domain.Contracts\Diga.Domain.Contracts.csproj">
       <Project>{d628086f-4bf2-4f9b-a65d-ba96ad0253f6}</Project>

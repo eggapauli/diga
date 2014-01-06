@@ -13,7 +13,8 @@ namespace Diga.Service
     {
         static void Main(string[] args)
         {
-            using (var host = new ServiceHost(typeof(DigaService))) {
+            using (var host = new ServiceHost(typeof(DigaService)))
+            {
                 host.Open();
                 Console.WriteLine("Diga service started ...");
                 Console.WriteLine("Press enter to stop the service.");

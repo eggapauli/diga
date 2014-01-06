@@ -22,7 +22,8 @@ namespace Diga.Service
     {
         public void AddOptimizationTask(string taskKey, DataContracts.OptimizationTask task)
         {
-            if (!StateManager.Instance.AddTask(taskKey, task)) {
+            if (!StateManager.Instance.AddTask(taskKey, task))
+            {
                 throw new FaultException<TaskNotAddedFault>(new TaskNotAddedFault());
             }
         }
@@ -30,11 +31,13 @@ namespace Diga.Service
         public DataContracts.OptimizationTask GetOptimizationTask(string taskKey)
         {
             var task = StateManager.Instance.GetTask(taskKey);
-            if (task == null) {
+            if (task == null)
+            {
                 throw new FaultException<TaskNotFoundFault>(new TaskNotFoundFault());
             }
 
-            if (task.StartTime == DateTime.MinValue) {
+            if (task.StartTime == DateTime.MinValue)
+            {
                 task.StartTime = DateTime.Now;
             }
 
@@ -48,16 +51,19 @@ namespace Diga.Service
             var channel = OperationContext.Current.GetCallbackChannel<IDigaCallback>();
 
             var task = StateManager.Instance.GetTask(taskKey);
-            if (task == null) {
+            if (task == null)
+            {
                 throw new FaultException<TaskNotFoundFault>(new TaskNotFoundFault());
             }
 
             task.Algorithm.Migrations++;
 
-            if (task.Algorithm.Migrations >= task.Algorithm.Parameters.MaximumMigrations) {
+            if (task.Algorithm.Migrations >= task.Algorithm.Parameters.MaximumMigrations)
+            {
                 channel.Finish();
             }
-            else {
+            else
+            {
                 // TODO implement migration strategy
                 Task.Delay(1000).ContinueWith(_ =>
                 {
@@ -69,7 +75,8 @@ namespace Diga.Service
         public async Task SetResultAsync(string taskKey, AbstractSolution bestSolution)
         {
             var task = StateManager.Instance.GetTask(taskKey);
-            if (task == null) {
+            if (task == null)
+            {
                 throw new FaultException<TaskNotFoundFault>(new TaskNotFoundFault());
             }
 
@@ -79,13 +86,13 @@ namespace Diga.Service
         public async Task<DataContracts.Result> GetResultAsync(string taskKey)
         {
             var task = StateManager.Instance.GetTask(taskKey);
-            if (task == null) {
+            if (task == null)
+            {
                 throw new FaultException<TaskNotFoundFault>(new TaskNotFoundFault());
             }
 
             return await StateManager.Instance.GetResultAsync(taskKey);
         }
-
 
         public async Task ClearResultsAsync()
         {

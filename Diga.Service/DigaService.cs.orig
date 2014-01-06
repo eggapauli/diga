@@ -1,0 +1,102 @@
+﻿using Diga.Domain.Service;
+using Diga.Domain.Service.Contracts;
+<<<<<<< HEAD
+using DataContracts = Diga.Domain.Service.DataContracts;
+using Diga.Domain.Crossovers;
+using Diga.Domain.Selectors;
+using Diga.Domain.ImmigrationReplacers;
+using Diga.Domain.Mutators;
+using Diga.Domain.Service;
+=======
+using Diga.Domain.Service.DataContracts;
+>>>>>>> 8a0d32c0e88f4e9e3f64849706bf1b98f09119d4
+using Diga.Domain.Service.DataContracts.Solutions;
+using Diga.Domain.Service.FaultContracts;
+using System.Collections.Generic;
+using System.ServiceModel;
+using System.Threading.Tasks;
+
+namespace Diga.Service
+{
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall,
+        ConcurrencyMode = ConcurrencyMode.Reentrant)]
+    public class DigaService : IDigaService
+    {
+        public void AddOptimizationTask(string taskKey, DataContracts.OptimizationTask task)
+        {
+            if (!StateManager.Instance.AddTask(taskKey, task))
+            {
+                throw new FaultException<TaskNotAddedFault>(new TaskNotAddedFault());
+            }
+        }
+
+        public DataContracts.OptimizationTask GetOptimizationTask(string taskKey)
+        {
+            var task = StateManager.Instance.GetTask(taskKey);
+            if (task == null)
+            {
+                throw new FaultException<TaskNotFoundFault>(new TaskNotFoundFault());
+            }
+
+            if (task.StartTime == DateTime.MinValue) {
+                task.StartTime = DateTime.Now;
+            }
+
+            var channel = OperationContext.Current.GetCallbackChannel<IDigaCallback>();
+            StateManager.Instance.AddWorker(taskKey, channel);
+            return task;
+        }
+
+        public void Migrate(string taskKey, IEnumerable<AbstractSolution> solutions)
+        {
+            var channel = OperationContext.Current.GetCallbackChannel<IDigaCallback>();
+
+            var task = StateManager.Instance.GetTask(taskKey);
+            if (task == null) {
+                throw new FaultException<TaskNotFoundFault>(new TaskNotFoundFault());
+            }
+
+            task.Algorithm.Migrations++;
+
+<<<<<<< HEAD
+            if (task.Algorithm.Migrations >= task.Algorithm.Parameters.MaximumMigrations) {
+=======
+            if (task.Algorithm.Migrations == task.Algorithm.Parameters.MaximumMigrations)
+            {
+>>>>>>> 8a0d32c0e88f4e9e3f64849706bf1b98f09119d4
+                channel.Finish();
+            }
+            else
+            {
+                // TODO implement migration strategy
+                Task.Delay(1000).ContinueWith(_ => channel.Migrate(solutions));
+            }
+        }
+
+        public async Task SetResultAsync(string taskKey, AbstractSolution bestSolution)
+        {
+            var task = StateManager.Instance.GetTask(taskKey);
+            if (task == null) {
+                throw new FaultException<TaskNotFoundFault>(new TaskNotFoundFault());
+            }
+
+            await StateManager.Instance.UpdateResultAsync(taskKey, bestSolution);
+        }
+
+        public async Task<DataContracts.Result> GetResultAsync(string taskKey)
+        {
+            var task = StateManager.Instance.GetTask(taskKey);
+            if (task == null) {
+                throw new FaultException<TaskNotFoundFault>(new TaskNotFoundFault());
+            }
+
+            return await StateManager.Instance.GetResultAsync(taskKey);
+        }
+
+
+        public async Task ClearResultsAsync()
+        {
+            await StateManager.Instance.ClearResultsAsync();
+        }
+    }
+}

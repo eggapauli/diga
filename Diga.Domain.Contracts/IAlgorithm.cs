@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Diga.Domain.Contracts
@@ -15,10 +11,12 @@ namespace Diga.Domain.Contracts
 
         int Migrations { get; set; }
 
+        Task InitializeAsync(IProblem problem);
+
         Task CalculateAsync(IProblem problem);
 
-        IEnumerable<ISolution> ReleaseEmigrants();
+        IEnumerable<ISolution> ReleaseEmigrants(IProblem problem);
 
-        void AddImmigrants(IEnumerable<ISolution> immigrants);
+        void AddImmigrants(IEnumerable<ISolution> immigrants, IProblem problem);
     }
 }

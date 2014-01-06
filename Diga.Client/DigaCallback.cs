@@ -1,12 +1,6 @@
-﻿using Diga.Domain.Service;
-using Diga.Domain.Service.Contracts;
-using Diga.Domain.Service.DataContracts;
+﻿using Diga.Domain.Service.Contracts;
 using Diga.Domain.Service.DataContracts.Solutions;
-using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -39,7 +33,8 @@ namespace Diga.Client
 
         public void Reset()
         {
-            if (cts != null) {
+            if (cts != null)
+            {
                 cts.Dispose();
             }
             cts = new CancellationTokenSource();
@@ -47,7 +42,8 @@ namespace Diga.Client
 
         public Task<IEnumerable<AbstractSolution>> WaitForMigrationAsync()
         {
-            if (tcs.Task.IsCompleted) {
+            if (tcs.Task.IsCompleted)
+            {
                 // `Migrate` has been called from the service before user called this method
                 var task = tcs.Task;
                 tcs = new TaskCompletionSource<IEnumerable<AbstractSolution>>();

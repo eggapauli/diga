@@ -1,0 +1,16 @@
+﻿using System.Runtime.Serialization;
+
+namespace Diga.Domain.Service.DataContracts.Problems
+{
+    [DataContract(Namespace = "http://diga.clc.fh-hagenberg/datacontracts")]
+    [KnownType(typeof(TSP))]
+    public abstract class AbstractProblem
+    {
+<<<<<<< HEAD
+        public abstract bool Maximization { get; }
+=======
+        [DataMember]
+        public bool Maximization { get; set; }
+>>>>>>> 8a0d32c0e88f4e9e3f64849706bf1b98f09119d4
+    }
+}

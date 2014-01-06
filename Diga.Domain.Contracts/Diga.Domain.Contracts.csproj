@@ -41,9 +41,11 @@
   <ItemGroup>
     <Compile Include="IAlgorithm.cs" />
     <Compile Include="ICrossover.cs" />
+    <Compile Include="IEvaluator.cs" />
     <Compile Include="IImmigrationReplacer.cs" />
     <Compile Include="IMigrator.cs" />
     <Compile Include="IMutator.cs" />
+    <Compile Include="ISolutionCreator.cs" />
     <Compile Include="IOptimizationTask.cs" />
     <Compile Include="IParameters.cs" />
     <Compile Include="IProblem.cs" />

@@ -5,9 +5,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Diga.Domain.Service
@@ -36,7 +34,8 @@ namespace Diga.Domain.Service
         public DataContracts.OptimizationTask GetTask(string key)
         {
             DataContracts.OptimizationTask task;
-            if (tasks.TryGetValue(key, out task)) {
+            if (tasks.TryGetValue(key, out task))
+            {
                 return task;
             }
             return null;
@@ -45,7 +44,8 @@ namespace Diga.Domain.Service
         public DataContracts.OptimizationTask RemoveTask(string key)
         {
             DataContracts.OptimizationTask task;
-            if (tasks.TryRemove(key, out task)) {
+            if (tasks.TryRemove(key, out task))
+            {
                 return task;
             }
             return null;
@@ -63,14 +63,17 @@ namespace Diga.Domain.Service
             var partitionKey = task.Problem.GetType().Name;
 
             var result = await GetResultAsync(partitionKey, taskKey);
-            if (result == null) {
-                result = new Entities.Result(partitionKey, taskKey) {
+            if (result == null)
+            {
+                result = new Entities.Result(partitionKey, taskKey)
+                {
                     BestQuality = bestSolution.Quality,
                     NumberOfWorkers = workers[taskKey].Count,
                     RunDurationMilliseconds = (DateTime.Now - task.StartTime).TotalMilliseconds
                 };
             }
-            else {
+            else
+            {
                 result.BestQuality = task.Problem.Maximization ? Math.Max(result.BestQuality, bestSolution.Quality) : Math.Min(result.BestQuality, bestSolution.Quality);
             }
 
@@ -112,9 +115,11 @@ namespace Diga.Domain.Service
             var table = GetResultsTable();
             var results = table.ExecuteQuery<Entities.Result>(new TableQuery<Entities.Result>());
 
-            if (results.Any()) {
+            if (results.Any())
+            {
                 var operation = new TableBatchOperation();
-                foreach (var result in results) {
+                foreach (var result in results)
+                {
                     operation.Add(TableOperation.Delete(result));
                 }
                 await table.ExecuteBatchAsync(operation);

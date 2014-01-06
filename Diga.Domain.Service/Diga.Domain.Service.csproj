@@ -70,6 +70,8 @@
     <Compile Include="Converter.cs" />
     <Compile Include="DataContracts\Algorithms\AbstractAlgorithm.cs" />
     <Compile Include="DataContracts\Crossovers\AbstractCrossover.cs" />
+    <Compile Include="DataContracts\Evaluators\AbstractEvaluator.cs" />
+    <Compile Include="DataContracts\Evaluators\TSPSolutionEvaluator.cs" />
     <Compile Include="DataContracts\ImmigrationReplacers\AbstractImmigrationReplacer.cs" />
     <Compile Include="DataContracts\Migrators\AbstractMigrator.cs" />
     <Compile Include="DataContracts\Migrators\UnidirectionalRingMigrator.cs" />
@@ -79,6 +81,8 @@
     <Compile Include="DataContracts\Result.cs" />
     <Compile Include="Entities\Result.cs" />
     <Compile Include="DataContracts\Selectors\AbstractSelector.cs" />
+    <Compile Include="DataContracts\SolutionCreators\AbstractSolutionCreator.cs" />
+    <Compile Include="DataContracts\SolutionCreators\RandomTSPSolutionCreator.cs" />
     <Compile Include="DataContracts\Solutions\AbstractSolution.cs" />
     <Compile Include="DataContracts\Selectors\BestSelector.cs" />
     <Compile Include="DataContracts\Mutators\InversionManipulator.cs" />

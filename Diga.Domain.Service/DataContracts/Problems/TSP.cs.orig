@@ -1,0 +1,18 @@
+﻿using System.Runtime.Serialization;
+
+namespace Diga.Domain.Service.DataContracts.Problems
+{
+    [DataContract(Namespace = "http://diga.clc.fh-hagenberg/datacontracts")]
+    public class TSP : AbstractProblem
+    {
+        [DataMember]
+<<<<<<< HEAD
+        public override bool Maximization
+        {
+            get { return false; }
+        }
+=======
+        public double[][] Coordinates { get; set; }
+>>>>>>> 8a0d32c0e88f4e9e3f64849706bf1b98f09119d4
+    }
+}
