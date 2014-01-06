@@ -8,7 +8,8 @@ namespace Diga.Domain.Service.DataContracts.Problems
 {
     [DataContract(Namespace = "http://diga.clc.fh-hagenberg/datacontracts")]
     [KnownType(typeof(TSP))]
-    public class AbstractProblem
+    public abstract class AbstractProblem
     {
+        public abstract bool Maximization { get; }
     }
 }

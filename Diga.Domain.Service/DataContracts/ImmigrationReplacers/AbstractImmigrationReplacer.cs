@@ -8,7 +8,7 @@ namespace Diga.Domain.Service.DataContracts.ImmigrationReplacers
 {
     [DataContract(Namespace = "http://diga.clc.fh-hagenberg/datacontracts")]
     [KnownType(typeof(WorstReplacer))]
-    public class AbstractImmigrationReplacer
+    public abstract class AbstractImmigrationReplacer
     {
     }
 }

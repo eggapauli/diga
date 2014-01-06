@@ -10,7 +10,7 @@ namespace Diga.Domain.Service.DataContracts.Algorithms
 {
     [DataContract(Namespace = "http://diga.clc.fh-hagenberg/datacontracts")]
     [KnownType(typeof(IslandGA))]
-    public class AbstractAlgorithm
+    public abstract class AbstractAlgorithm
     {
         [DataMember]
         public AbstractParameters Parameters { get; set; }

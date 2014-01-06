@@ -33,7 +33,7 @@ namespace Diga.Domain.Algorithms
         public Task CalculateAsync(IProblem problem)
         {
             // TODO implement
-            return Task.Delay(5000);
+            return Task.Delay(1000);
         }
 
         public IEnumerable<ISolution> ReleaseEmigrants()

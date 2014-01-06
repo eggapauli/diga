@@ -16,6 +16,8 @@ namespace Diga.Domain
 
         public IAlgorithm Algorithm { get; private set; }
 
+        public DateTime StartTime { get; set; }
+
         public OptimizationTask()
         {
         }

@@ -25,16 +25,19 @@ namespace Diga.Domain.Service
 
             string typeName = objType.FullName.Substring(sourceBaseNamespace.Length + 1);
             var fullTypeName = string.Format(targetTypeFormat, typeName);
-            Type type = Type.GetType(fullTypeName);
+            var type = Type.GetType(fullTypeName);
             var result = Activator.CreateInstance(type);
 
-            // TODO ignore indexer
-            foreach (var property in obj.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)) {
-                var domainObject = property.GetMethod.Invoke(obj, new object[0]);
+            var properties = from prop in obj.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                             where prop.GetMethod != null && prop.GetMethod.GetParameters().Length == 0 // ignore indexer
+                             let resultProp = type.GetProperty(prop.Name)
+                             where resultProp.SetMethod != null
+                             select new { SourceProperty = prop, TargetProperty = resultProp };
+            foreach (var pair in properties) {
+                var domainObject = pair.SourceProperty.GetMethod.Invoke(obj, new object[0]);
                 var dataContractObject = Converter.Convert(domainObject, sourceAssemblyName, sourceBaseNamespace, targetTypeFormat);
 
-                var resultProperty = type.GetProperty(property.Name);
-                resultProperty.SetMethod.Invoke(result, new[] { dataContractObject });
+                pair.TargetProperty.SetMethod.Invoke(result, new[] { dataContractObject });
             }
             return result;
         }

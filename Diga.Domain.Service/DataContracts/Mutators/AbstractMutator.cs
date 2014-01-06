@@ -8,7 +8,7 @@ namespace Diga.Domain.Service.DataContracts.Mutators
 {
     [DataContract(Namespace = "http://diga.clc.fh-hagenberg/datacontracts")]
     [KnownType(typeof(InversionManipulator))]
-    public class AbstractMutator
+    public abstract class AbstractMutator
     {
     }
 }

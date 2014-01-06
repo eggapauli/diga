@@ -5,7 +5,7 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using Diga.Domain.Service.Contracts;
-using Diga.Domain.Service.DataContracts;
+using DataContracts = Diga.Domain.Service.DataContracts;
 using Diga.Domain.Crossovers;
 using Diga.Domain.Selectors;
 using Diga.Domain.ImmigrationReplacers;
@@ -20,18 +20,22 @@ namespace Diga.Service
         ConcurrencyMode = ConcurrencyMode.Reentrant)]
     public class DigaService : IDigaService
     {
-        public void AddOptimizationTask(string taskKey, OptimizationTask task)
+        public void AddOptimizationTask(string taskKey, DataContracts.OptimizationTask task)
         {
             if (!StateManager.Instance.AddTask(taskKey, task)) {
                 throw new FaultException<TaskNotAddedFault>(new TaskNotAddedFault());
             }
         }
 
-        public OptimizationTask GetOptimizationTask(string taskKey)
+        public DataContracts.OptimizationTask GetOptimizationTask(string taskKey)
         {
             var task = StateManager.Instance.GetTask(taskKey);
             if (task == null) {
                 throw new FaultException<TaskNotFoundFault>(new TaskNotFoundFault());
+            }
+
+            if (task.StartTime == DateTime.MinValue) {
+                task.StartTime = DateTime.Now;
             }
 
             var channel = OperationContext.Current.GetCallbackChannel<IDigaCallback>();
@@ -41,12 +45,16 @@ namespace Diga.Service
 
         public void Migrate(string taskKey, IEnumerable<AbstractSolution> solutions)
         {
-            var channel = OperationContext.Current.GetCallbackChannel<IDigaCallback>(); 
+            var channel = OperationContext.Current.GetCallbackChannel<IDigaCallback>();
 
             var task = StateManager.Instance.GetTask(taskKey);
+            if (task == null) {
+                throw new FaultException<TaskNotFoundFault>(new TaskNotFoundFault());
+            }
+
             task.Algorithm.Migrations++;
 
-            if (task.Algorithm.Migrations == task.Algorithm.Parameters.MaximumMigrations) {
+            if (task.Algorithm.Migrations >= task.Algorithm.Parameters.MaximumMigrations) {
                 channel.Finish();
             }
             else {
@@ -58,9 +66,30 @@ namespace Diga.Service
             }
         }
 
-        public void SetResult(string taskKey, AbstractSolution bestSolution)
+        public async Task SetResultAsync(string taskKey, AbstractSolution bestSolution)
         {
-            // TODO update best solution
+            var task = StateManager.Instance.GetTask(taskKey);
+            if (task == null) {
+                throw new FaultException<TaskNotFoundFault>(new TaskNotFoundFault());
+            }
+
+            await StateManager.Instance.UpdateResultAsync(taskKey, bestSolution);
+        }
+
+        public async Task<DataContracts.Result> GetResultAsync(string taskKey)
+        {
+            var task = StateManager.Instance.GetTask(taskKey);
+            if (task == null) {
+                throw new FaultException<TaskNotFoundFault>(new TaskNotFoundFault());
+            }
+
+            return await StateManager.Instance.GetResultAsync(taskKey);
+        }
+
+
+        public async Task ClearResultsAsync()
+        {
+            await StateManager.Instance.ClearResultsAsync();
         }
     }
 }

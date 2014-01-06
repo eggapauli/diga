@@ -10,5 +10,9 @@ namespace Diga.Domain.Problems
 {
     public class TSP : IProblem
     {
+        public bool Maximization
+        {
+            get { return false; }
+        }
     }
 }

@@ -11,5 +11,7 @@ namespace Diga.Domain.Contracts
         IProblem Problem { get; }
 
         IAlgorithm Algorithm { get; }
+
+        DateTime StartTime { get; }
     }
 }

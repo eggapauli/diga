@@ -8,7 +8,7 @@ namespace Diga.Domain.Service.DataContracts.Selectors
 {
     [DataContract(Namespace = "http://diga.clc.fh-hagenberg/datacontracts")]
     [KnownType(typeof(BestSelector))]
-    public class AbstractSelector
+    public abstract class AbstractSelector
     {
     }
 }

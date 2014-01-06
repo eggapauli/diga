@@ -8,7 +8,7 @@ namespace Diga.Domain.Service.DataContracts.Crossovers
 {
     [DataContract(Namespace = "http://diga.clc.fh-hagenberg/datacontracts")]
     [KnownType(typeof(MaximalPreservativeCrossover))]
-    public class AbstractCrossover
+    public abstract class AbstractCrossover
     {
     }
 }
