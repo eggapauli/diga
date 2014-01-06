@@ -1,5 +1,6 @@
 ﻿using Diga.Domain.Contracts;
 using System;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace Diga.Domain.Problems
     public class TSP : IProblem
     {
         private const string TSPLIB_URL = "http://www.iwr.uni-heidelberg.de/groups/comopt/software/TSPLIB95/tsp/";
+        private static readonly CultureInfo culture = new CultureInfo("de-DE");
 
         public bool Maximization { get { return false; } }
 
@@ -40,8 +42,8 @@ namespace Diga.Domain.Problems
             {
                 string[] coords = coordLines[i].Split();
                 Coordinates[i] = new double[2];
-                Coordinates[i][0] = double.Parse(coords[1]);
-                Coordinates[i][1] = double.Parse(coords[2]);
+                Coordinates[i][0] = double.Parse(coords[1], culture);
+                Coordinates[i][1] = double.Parse(coords[2], culture);
             }
         }
     }

@@ -113,8 +113,9 @@ namespace Diga.Client
                     var emigrants = task.Algorithm.ReleaseEmigrants(task.Problem);
                     var solutionData = emigrants.Select(solution => (AbstractSolution)Svc.Converter.ConvertFromDomainToService(solution));
 
+                    var waitForMigrationTask = digaCallback.WaitForMigrationAsync();
                     digaService.Migrate(taskKey, solutionData);
-                    var immigrants = await digaCallback.WaitForMigrationAsync();
+                    var immigrants = await waitForMigrationTask;
                     task.Algorithm.AddImmigrants(immigrants.Select(solution => (Domain.Contracts.ISolution)Svc.Converter.ConvertFromServiceToDomain(solution)), task.Problem);
                     iterationNumber++;
                 } while (!digaCallback.FinishToken.IsCancellationRequested);
