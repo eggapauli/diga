@@ -1,17 +1,18 @@
-﻿using Diga.Domain.Service;
-using Diga.Domain.Service.Contracts;
-using DataContracts = Diga.Domain.Service.DataContracts;
-using Diga.Domain.Service.DataContracts.Solutions;
-using Diga.Domain.Service.FaultContracts;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.ServiceModel;
-using System.ServiceModel.Web;
 using System.Text;
 using System.Threading.Tasks;
-using Storage = Microsoft.WindowsAzure.Storage;
+using Diga.Domain.Service.Contracts;
+using DataContracts = Diga.Domain.Service.DataContracts;
+using Diga.Domain.Crossovers;
+using Diga.Domain.Selectors;
+using Diga.Domain.ImmigrationReplacers;
+using Diga.Domain.Mutators;
+using Diga.Domain.Service;
+using Diga.Domain.Service.DataContracts.Solutions;
+using Diga.Domain.Service.FaultContracts;
 
 namespace Diga.Cloud.Service
 {
@@ -21,7 +22,8 @@ namespace Diga.Cloud.Service
     {
         public void AddOptimizationTask(string taskKey, DataContracts.OptimizationTask task)
         {
-            if (!StateManager.Instance.AddTask(taskKey, task)) {
+            if (!StateManager.Instance.AddTask(taskKey, task))
+            {
                 throw new FaultException<TaskNotAddedFault>(new TaskNotAddedFault());
             }
         }
@@ -29,11 +31,13 @@ namespace Diga.Cloud.Service
         public DataContracts.OptimizationTask GetOptimizationTask(string taskKey)
         {
             var task = StateManager.Instance.GetTask(taskKey);
-            if (task == null) {
+            if (task == null)
+            {
                 throw new FaultException<TaskNotFoundFault>(new TaskNotFoundFault());
             }
 
-            if (task.StartTime == DateTime.MinValue) {
+            if (task.StartTime == DateTime.MinValue)
+            {
                 task.StartTime = DateTime.Now;
             }
 
@@ -47,12 +51,19 @@ namespace Diga.Cloud.Service
             var channel = OperationContext.Current.GetCallbackChannel<IDigaCallback>();
 
             var task = StateManager.Instance.GetTask(taskKey);
+            if (task == null)
+            {
+                throw new FaultException<TaskNotFoundFault>(new TaskNotFoundFault());
+            }
+
             task.Algorithm.Migrations++;
 
-            if (task.Algorithm.Migrations >= task.Algorithm.Parameters.MaximumMigrations) {
+            if (task.Algorithm.Migrations >= task.Algorithm.Parameters.MaximumMigrations)
+            {
                 channel.Finish();
             }
-            else {
+            else
+            {
                 // TODO implement migration strategy
                 Task.Delay(1000).ContinueWith(_ =>
                 {
@@ -63,19 +74,25 @@ namespace Diga.Cloud.Service
 
         public async Task SetResultAsync(string taskKey, AbstractSolution bestSolution)
         {
+            var task = StateManager.Instance.GetTask(taskKey);
+            if (task == null)
+            {
+                throw new FaultException<TaskNotFoundFault>(new TaskNotFoundFault());
+            }
+
             await StateManager.Instance.UpdateResultAsync(taskKey, bestSolution);
         }
 
         public async Task<DataContracts.Result> GetResultAsync(string taskKey)
         {
             var task = StateManager.Instance.GetTask(taskKey);
-            if (task == null) {
+            if (task == null)
+            {
                 throw new FaultException<TaskNotFoundFault>(new TaskNotFoundFault());
             }
 
             return await StateManager.Instance.GetResultAsync(taskKey);
         }
-
 
         public async Task ClearResultsAsync()
         {
