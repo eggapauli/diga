@@ -14,6 +14,8 @@ namespace Diga.Domain.Service.DataContracts
         [DataMember]
         public AbstractAlgorithm Algorithm { get; set; }
 
-        public DateTime StartTime { get; set; }
+        public DateTime? StartTime { get; set; }
+
+        public DateTime? EndTime { get; set; }
     }
 }

@@ -13,7 +13,7 @@ namespace Diga.Domain.Problems
     public class TSP : IProblem
     {
         private const string TSPLIB_URL = "http://www.iwr.uni-heidelberg.de/groups/comopt/software/TSPLIB95/tsp/";
-        private static readonly CultureInfo culture = new CultureInfo("de-DE");
+        private static readonly CultureInfo culture = new CultureInfo("en-US");
 
         public bool Maximization { get { return false; } }
 

@@ -8,6 +8,8 @@ namespace Diga.Domain.Contracts
 
         IAlgorithm Algorithm { get; }
 
-        DateTime StartTime { get; }
+        DateTime? StartTime { get; }
+
+        DateTime? EndTime { get; }
     }
 }

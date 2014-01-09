@@ -16,6 +16,7 @@ namespace Diga.Domain.Service.Contracts
 
         [OperationContract]
         [FaultContract(typeof(TaskNotFoundFault))]
+        [FaultContract(typeof(TaskFinishedFault))]
         OptimizationTask GetOptimizationTask(string taskKey);
 
         [OperationContract]

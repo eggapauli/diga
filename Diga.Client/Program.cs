@@ -2,7 +2,10 @@
 using Diga.Domain.Service.DataContracts.Solutions;
 using Diga.Domain.Service.FaultContracts;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using Svc = Diga.Domain.Service;
@@ -15,44 +18,49 @@ namespace Diga.Client
 
         static void Main(string[] args)
         {
-            bool isValidInput;
             var digaCallback = new DigaCallback();
+
+            string argument = args.Length == 1 ? args[0] : null;
 
             using (var channelFactory = new DuplexChannelFactory<Svc.Contracts.IDigaService>(new InstanceContext(digaCallback), "DigaService_DualHttpEndpoint"))
             {
                 var digaService = channelFactory.CreateChannel();
 
+                var actions = new List<KeyValuePair<string, Action>> {
+                    new KeyValuePair<string, Action>("Add sample problem", () => AddSampleProblem(digaService, sampleProblemTaskKey)),
+                    new KeyValuePair<string, Action>("Participate in solving a sample problem", () => SolveSampleProblemAsync(digaService, digaCallback, sampleProblemTaskKey).Wait()),
+                    new KeyValuePair<string, Action>("Start clients to solve a sample problem", () => StartClients()),
+                    new KeyValuePair<string, Action>("Retrieve the best solution of a sample problem", () => ShowSampleProblemSolutionAsync(digaService, sampleProblemTaskKey).Wait()),
+                    new KeyValuePair<string, Action>("Clear results", () => ClearSampleProblemResultAsync(digaService).Wait()),
+                };
+
+                bool isValidInput;
                 do
                 {
-                    Console.WriteLine("What would you like to do?");
-                    Console.WriteLine("0 ... Exit");
-                    Console.WriteLine("1 ... Add sample problem");
-                    Console.WriteLine("2 ... Participate in solving a sample problem");
-                    Console.WriteLine("3 ... Retrieve the best solution of a sample problem");
-                    Console.WriteLine("4 ... Clear results");
-
                     int choice;
-                    isValidInput = int.TryParse(Console.ReadLine(), out choice);
-                    if (isValidInput)
+                    if (argument != null)
                     {
-                        switch (choice)
+                        isValidInput = int.TryParse(argument, out choice);
+                        argument = null;
+                    }
+                    else
+                    {
+                        Console.WriteLine("What would you like to do?");
+                        Console.WriteLine("0 ... Exit");
+                        foreach (var action in actions.Select((a, i) => new { Action = a, Index = i + 1 }))
                         {
-                            case 1:
-                                AddSampleProblem(digaService, sampleProblemTaskKey);
-                                break;
-                            case 2:
-                                SolveSampleProblemAsync(digaService, digaCallback, sampleProblemTaskKey).Wait();
-                                break;
-                            case 3:
-                                ShowSampleProblemSolutionAsync(digaService, sampleProblemTaskKey).Wait();
-                                break;
-                            case 4:
-                                ClearSampleProblemResultAsync(digaService).Wait();
-                                break;
-                            default:
-                                isValidInput = false;
-                                break;
+                            Console.WriteLine("{0} ... {1}", action.Index, action.Action.Key);
                         }
+
+                        isValidInput = int.TryParse(Console.ReadLine(), out choice);
+                    }
+
+                    isValidInput = isValidInput && choice > 0 && choice <= actions.Count;
+
+                    var selectedAction = isValidInput ? actions[choice - 1].Value : null;
+                    if (selectedAction != null)
+                    {
+                        selectedAction();
                     }
                 } while (isValidInput);
             }
@@ -66,9 +74,9 @@ namespace Diga.Client
                 emigrantsSelector: new Domain.Selectors.BestSelector(),
                 evaluator: new Domain.Evaluators.TSPSolutionEvaluator(),
                 immigrationReplacer: new Domain.ImmigrationReplacers.WorstReplacer(),
-                maximumMigrations: 5,
+                maximumMigrations: 20,
                 migrationInterval: 50,
-                migrationRate: 0.15,
+                migrationRate: 0.25,
                 migrator: new Domain.Migrators.UnidirectionalRingMigrator(),
                 mutationProbability: 0.05,
                 mutator: new Domain.Mutators.InversionManipulator(),
@@ -98,16 +106,18 @@ namespace Diga.Client
             try
             {
                 var taskData = digaService.GetOptimizationTask(taskKey);
-                Domain.OptimizationTask task = (Domain.OptimizationTask)Svc.Converter.ConvertFromServiceToDomain(taskData);
+                var task = (Domain.OptimizationTask)Svc.Converter.ConvertFromServiceToDomain(taskData);
 
                 Console.WriteLine("Started initializing {0}.", taskKey);
                 await task.Algorithm.InitializeAsync(task.Problem);
                 Console.WriteLine("Finished initializing {0}.", taskKey);
 
                 Console.WriteLine("Start calculating {0}.", taskKey);
-                int iterationNumber = task.Algorithm.Migrations + 1;
+                int iterationNumber = 0;
+                bool finished = false;
                 do
                 {
+                    iterationNumber++;
                     Console.WriteLine("Starting iteration {0}.", iterationNumber);
                     await task.Algorithm.CalculateAsync(task.Problem);
                     var emigrants = task.Algorithm.ReleaseEmigrants(task.Problem);
@@ -116,9 +126,12 @@ namespace Diga.Client
                     var waitForMigrationTask = digaCallback.WaitForMigrationAsync();
                     digaService.Migrate(taskKey, solutionData);
                     var immigrants = await waitForMigrationTask;
-                    task.Algorithm.AddImmigrants(immigrants.Select(solution => (Domain.Contracts.ISolution)Svc.Converter.ConvertFromServiceToDomain(solution)), task.Problem);
-                    iterationNumber++;
-                } while (!digaCallback.FinishToken.IsCancellationRequested);
+                    if (immigrants != null)
+                    {
+                        task.Algorithm.AddImmigrants(immigrants.Select(solution => (Domain.Contracts.ISolution)Svc.Converter.ConvertFromServiceToDomain(solution)), task.Problem);
+                    }
+                    finished = immigrants == null;
+                } while (!finished);
 
                 await digaService.SetResultAsync(taskKey, (AbstractSolution)Svc.Converter.ConvertFromDomainToService(task.Algorithm.BestSolution));
 
@@ -127,6 +140,20 @@ namespace Diga.Client
             catch (FaultException<TaskNotFoundFault>)
             {
                 Console.Error.WriteLine("The task couldn't be found.");
+            }
+            catch (FaultException<TaskFinishedFault>)
+            {
+                Console.Error.WriteLine("The task has already been finished.");
+            }
+        }
+
+        private static void StartClients()
+        {
+            var processPath = Assembly.GetExecutingAssembly().Location;
+
+            foreach (var i in Enumerable.Range(0, 5))
+            {
+                Process.Start(processPath, "2");
             }
         }
 

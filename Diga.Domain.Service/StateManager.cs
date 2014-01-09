@@ -27,7 +27,8 @@ namespace Diga.Domain.Service
 
         public bool AddTask(string key, DataContracts.OptimizationTask task)
         {
-            task.StartTime = DateTime.MinValue;
+            task.StartTime = null;
+            task.EndTime = null;
             return tasks.TryAdd(key, task);
         }
 
@@ -69,7 +70,7 @@ namespace Diga.Domain.Service
                 {
                     BestQuality = bestSolution.Quality,
                     NumberOfWorkers = workers[taskKey].Count,
-                    RunDurationMilliseconds = (DateTime.Now - task.StartTime).TotalMilliseconds
+                    RunDurationMilliseconds = (task.EndTime.Value - task.StartTime.Value).TotalMilliseconds
                 };
             }
             else
@@ -124,6 +125,9 @@ namespace Diga.Domain.Service
                 }
                 await table.ExecuteBatchAsync(operation);
             }
+
+            tasks.Clear();
+            workers.Clear();
         }
     }
 }

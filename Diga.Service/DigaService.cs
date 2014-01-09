@@ -35,11 +35,12 @@ namespace Diga.Service
             {
                 throw new FaultException<TaskNotFoundFault>(new TaskNotFoundFault());
             }
-
-            if (task.StartTime == DateTime.MinValue)
+            else if (task.EndTime != null)
             {
-                task.StartTime = DateTime.Now;
+                throw new FaultException<TaskFinishedFault>(new TaskFinishedFault());
             }
+
+            task.StartTime = task.StartTime ?? DateTime.Now;
 
             var channel = OperationContext.Current.GetCallbackChannel<IDigaCallback>();
             StateManager.Instance.AddWorker(taskKey, channel);
@@ -60,12 +61,13 @@ namespace Diga.Service
 
             if (task.Algorithm.Migrations >= task.Algorithm.Parameters.MaximumMigrations)
             {
-                channel.Finish();
+                task.EndTime = task.EndTime ?? DateTime.Now;
+                channel.Migrate(null);
             }
             else
             {
                 // TODO implement migration strategy
-                Task.Delay(1000).ContinueWith(_ =>
+                Task.Delay(50).ContinueWith(_ =>
                 {
                     channel.Migrate(solutions);
                 });

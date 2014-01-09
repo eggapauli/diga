@@ -93,6 +93,7 @@
     <Compile Include="DataContracts\OptimizationTask.cs" />
     <Compile Include="DataContracts\Solutions\TSPSolution.cs" />
     <Compile Include="DataContracts\ImmigrationReplacers\WorstReplacer.cs" />
+    <Compile Include="FaultContracts\TaskFinishedFault.cs" />
     <Compile Include="FaultContracts\TaskNotAddedFault.cs" />
     <Compile Include="FaultContracts\TaskNotFoundFault.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
