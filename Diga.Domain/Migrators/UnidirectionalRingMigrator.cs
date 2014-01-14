@@ -9,5 +9,9 @@ namespace Diga.Domain.Migrators
 {
     public class UnidirectionalRingMigrator : IMigrator
     {
+        public int[] GetMigrationMap(int numberOfPopulations)
+        {
+            return Enumerable.Range(0, numberOfPopulations).Select(i => (i + 1) % numberOfPopulations).ToArray();
+        }
     }
 }

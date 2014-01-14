@@ -79,6 +79,7 @@
     <Compile Include="DataContracts\Parameters\AbstractParameters.cs" />
     <Compile Include="DataContracts\Problems\AbstractProblem.cs" />
     <Compile Include="DataContracts\Result.cs" />
+    <Compile Include="DigaServiceLogic.cs" />
     <Compile Include="Entities\Result.cs" />
     <Compile Include="DataContracts\Selectors\AbstractSelector.cs" />
     <Compile Include="DataContracts\SolutionCreators\AbstractSolutionCreator.cs" />
@@ -101,6 +102,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Diga.Domain.Contracts\Diga.Domain.Contracts.csproj">
+      <Project>{d628086f-4bf2-4f9b-a65d-ba96ad0253f6}</Project>
+      <Name>Diga.Domain.Contracts</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

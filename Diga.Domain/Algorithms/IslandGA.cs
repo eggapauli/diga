@@ -45,19 +45,22 @@ namespace Diga.Domain.Algorithms
             return Task.Run(() =>
             {
                 var @params = (IslandGAParameters)Parameters;
-                var selected = @params.Selector.Apply(population, (population.Length - @params.Elites) * 2, problem.Maximization).ToArray();
-                var offspring = new ISolution[selected.Length / 2];
-                for (int i = 0; i < offspring.Length; i++)
+                for (int it = 0; it < @params.MigrationInterval; it++)
                 {
-                    var mother = selected[i * 2];
-                    var father = selected[i * 2 + 1];
-                    offspring[i] = @params.Crossover.Apply(@params.Random, mother, father);
-                    if (@params.Random.NextDouble() < @params.MutationProbability)
-                        @params.Mutator.Apply(@params.Random, offspring[i]);
-                    @params.Evaluator.Apply(offspring[i], problem);
+                    var selected = @params.Selector.Apply(population, (population.Length - @params.Elites) * 2, problem.Maximization).ToArray();
+                    var offspring = new ISolution[selected.Length / 2];
+                    for (int i = 0; i < offspring.Length; i++)
+                    {
+                        var mother = selected[i * 2];
+                        var father = selected[i * 2 + 1];
+                        offspring[i] = @params.Crossover.Apply(@params.Random, mother, father);
+                        if (@params.Random.NextDouble() < @params.MutationProbability)
+                            @params.Mutator.Apply(@params.Random, offspring[i]);
+                        @params.Evaluator.Apply(offspring[i], problem);
+                    }
+                    var elites = @params.Selector.Apply(population, @params.Elites, problem.Maximization).ToArray();
+                    population = elites.Concat(offspring).ToArray();
                 }
-                var elites = @params.Selector.Apply(population, @params.Elites, problem.Maximization).ToArray();
-                population = elites.Concat(offspring).ToArray();
                 BestSolution = @params.Selector.Apply(population, 1, problem.Maximization).Single();
             });
         }
@@ -65,7 +68,7 @@ namespace Diga.Domain.Algorithms
         public IEnumerable<ISolution> ReleaseEmigrants(IProblem problem)
         {
             var @params = (IslandGAParameters)Parameters;
-            var emigrants = @params.Selector.Apply(population, (int)Math.Round(population.Length * @params.MigrationRate), problem.Maximization);
+            var emigrants = @params.EmigrantsSelector.Apply(population, (int)Math.Round(population.Length * @params.MigrationRate), problem.Maximization);
             return emigrants;
         }
 

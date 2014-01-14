@@ -5,6 +5,8 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,6 +21,9 @@ namespace Diga.Domain.Service
 
         private ConcurrentDictionary<string, ConcurrentBag<IDigaCallback>> workers =
             new ConcurrentDictionary<string, ConcurrentBag<IDigaCallback>>();
+
+        private ConcurrentDictionary<string, ConcurrentDictionary<IDigaCallback, IEnumerable<AbstractSolution>>> migrations =
+            new ConcurrentDictionary<string, ConcurrentDictionary<IDigaCallback, IEnumerable<AbstractSolution>>>();
 
         public static StateManager Instance
         {
@@ -58,18 +63,54 @@ namespace Diga.Domain.Service
             list.Add(worker);
         }
 
-        public async Task UpdateResultAsync(string taskKey, AbstractSolution bestSolution)
+        public IList<IDigaCallback> GetWorkers(string key)
         {
-            var task = tasks[taskKey];
+            ConcurrentBag<IDigaCallback> list;
+            if (workers.TryGetValue(key, out list))
+            {
+                return list.ToList();
+            }
+            return null;
+        }
+
+        public void AddMigration(string key, IDigaCallback channel, IEnumerable<AbstractSolution> solutions)
+        {
+            var list = migrations.GetOrAdd(key, new ConcurrentDictionary<IDigaCallback,IEnumerable<AbstractSolution>>());
+            var isAdded = list.TryAdd(channel, solutions);
+            Debug.Assert(isAdded);
+        }
+
+        public IDictionary<IDigaCallback, IEnumerable<AbstractSolution>> GetMigrations(string key)
+        {
+            ConcurrentDictionary<IDigaCallback, IEnumerable<AbstractSolution>> list;
+            if (migrations.TryGetValue(key, out list))
+            {
+                return list.ToDictionary(item => item.Key, item => item.Value);
+            }
+            return null;
+        }
+
+        public void ResetMigrations(string key)
+        {
+            ConcurrentDictionary<IDigaCallback, IEnumerable<AbstractSolution>> list;
+            if (migrations.TryGetValue(key, out list))
+            {
+                list.Clear();
+            }
+        }
+
+        public async Task UpdateResultAsync(string key, AbstractSolution bestSolution)
+        {
+            var task = tasks[key];
             var partitionKey = task.Problem.GetType().Name;
 
-            var result = await GetResultAsync(partitionKey, taskKey);
+            var result = await GetResultAsync(partitionKey, key);
             if (result == null)
             {
-                result = new Entities.Result(partitionKey, taskKey)
+                result = new Entities.Result(partitionKey, key)
                 {
                     BestQuality = bestSolution.Quality,
-                    NumberOfWorkers = workers[taskKey].Count,
+                    NumberOfWorkers = workers[key].Count,
                     RunDurationMilliseconds = (task.EndTime.Value - task.StartTime.Value).TotalMilliseconds
                 };
             }
@@ -82,12 +123,12 @@ namespace Diga.Domain.Service
             await table.ExecuteAsync(TableOperation.InsertOrMerge(result));
         }
 
-        public async Task<DataContracts.Result> GetResultAsync(string taskKey)
+        public async Task<DataContracts.Result> GetResultAsync(string key)
         {
-            var task = tasks[taskKey];
+            var task = tasks[key];
             var partitionKey = task.Problem.GetType().Name;
 
-            var result = await GetResultAsync(partitionKey, taskKey);
+            var result = await GetResultAsync(partitionKey, key);
             return new DataContracts.Result(TimeSpan.FromMilliseconds(result.RunDurationMilliseconds), result.BestQuality, result.NumberOfWorkers);
         }
 

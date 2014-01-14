@@ -20,7 +20,8 @@ namespace Diga.Client
         {
             var digaCallback = new DigaCallback();
 
-            string argument = args.Length == 1 ? args[0] : null;
+            string argument = args.SkipWhile(arg => arg != "-choice").Skip(1).FirstOrDefault();
+            bool exitAfterAction = args.Any(arg => arg == "-exitAfterAction");
 
             using (var channelFactory = new DuplexChannelFactory<Svc.Contracts.IDigaService>(new InstanceContext(digaCallback), "DigaService_DualHttpEndpoint"))
             {
@@ -62,7 +63,7 @@ namespace Diga.Client
                     {
                         selectedAction();
                     }
-                } while (isValidInput);
+                } while (isValidInput && !exitAfterAction);
             }
         }
 
@@ -153,7 +154,7 @@ namespace Diga.Client
 
             foreach (var i in Enumerable.Range(0, 5))
             {
-                Process.Start(processPath, "2");
+                Process.Start(processPath, "-choice 2 -exitAfterAction");
             }
         }
 
