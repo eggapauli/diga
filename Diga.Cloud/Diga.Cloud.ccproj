@@ -45,10 +45,19 @@
       <RoleName>Diga.Cloud.Service</RoleName>
       <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
     </ProjectReference>
+    <ProjectReference Include="..\Diga.Cloud.WebStatus\Diga.Cloud.WebStatus.csproj">
+      <Name>Diga.Cloud.WebStatus</Name>
+      <Project>{aae716b8-3724-4385-9306-a17b2992cef2}</Project>
+      <Private>True</Private>
+      <RoleType>Worker</RoleType>
+      <RoleName>Diga.Cloud.WebStatus</RoleName>
+      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Diga.Cloud.ClientContent\" />
     <Folder Include="Diga.Cloud.ServiceContent\" />
+    <Folder Include="Diga.Cloud.WebStatusContent\" />
     <Folder Include="Profiles" />
   </ItemGroup>
   <ItemGroup>
@@ -56,6 +65,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Diga.Cloud.ServiceContent\diagnostics.wadcfg">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Diga.Cloud.WebStatusContent\diagnostics.wadcfg">
       <SubType>Content</SubType>
     </Content>
   </ItemGroup>
