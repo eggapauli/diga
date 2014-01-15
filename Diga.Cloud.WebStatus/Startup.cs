@@ -9,9 +9,16 @@ namespace Diga.Cloud.WebStatus
         {
             var config = new HttpConfiguration();
             config.Routes.MapHttpRoute(
-                "Default",
-                "{controller}/{id}",
-                new { id = RouteParameter.Optional });
+                name: "TaskDetail",
+                routeTemplate: "{taskKey}",
+                defaults: new { controller = "Status", action = "GetTaskById" },
+                constraints: new { taskKey = @"\w+" }
+            );
+            config.Routes.MapHttpRoute(
+                name: "TaskSummary",
+                routeTemplate: "",
+                defaults: new { controller = "Status", action = "GetAllTaskKeys" }
+            );
 
             app.UseWebApi(config);
         }

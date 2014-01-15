@@ -20,6 +20,9 @@ namespace Diga.Domain.Service.Contracts
         OptimizationTask GetOptimizationTask(string taskKey);
 
         [OperationContract]
+        IEnumerable<string> GetAllOptimizationTaskKeys();
+
+        [OperationContract]
         [FaultContract(typeof(TaskNotFoundFault))]
         void Migrate(string taskKey, IEnumerable<AbstractSolution> solutions);
 

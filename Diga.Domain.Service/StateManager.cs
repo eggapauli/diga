@@ -47,6 +47,11 @@ namespace Diga.Domain.Service
             return null;
         }
 
+        public IEnumerable<string> GetAllTaskKeys()
+        {
+            return tasks.Keys;
+        }
+
         public DataContracts.OptimizationTask RemoveTask(string key)
         {
             DataContracts.OptimizationTask task;
@@ -75,7 +80,7 @@ namespace Diga.Domain.Service
 
         public void AddMigration(string key, IDigaCallback channel, IEnumerable<AbstractSolution> solutions)
         {
-            var list = migrations.GetOrAdd(key, new ConcurrentDictionary<IDigaCallback,IEnumerable<AbstractSolution>>());
+            var list = migrations.GetOrAdd(key, new ConcurrentDictionary<IDigaCallback, IEnumerable<AbstractSolution>>());
             var isAdded = list.TryAdd(channel, solutions);
             Debug.Assert(isAdded);
         }

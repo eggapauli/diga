@@ -5,10 +5,8 @@ using Diga.Domain.Service.DataContracts.Solutions;
 using Diga.Domain.Service.FaultContracts;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.ServiceModel;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Diga.Domain.Service
@@ -42,6 +40,11 @@ namespace Diga.Domain.Service
             var channel = OperationContext.Current.GetCallbackChannel<IDigaCallback>();
             StateManager.Instance.AddWorker(taskKey, channel);
             return task;
+        }
+
+        public IEnumerable<string> GetAllOptimizationTaskKeys()
+        {
+            return StateManager.Instance.GetAllTaskKeys();
         }
 
         public void Migrate(string taskKey, IEnumerable<AbstractSolution> solutions)

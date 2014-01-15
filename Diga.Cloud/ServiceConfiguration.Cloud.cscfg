@@ -10,7 +10,7 @@
   <Role name="Diga.Cloud.WebStatus">
     <Instances count="1" />
     <ConfigurationSettings>
-      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=digajkarder;AccountKey=AE/rJCSiY0qpyBoAT9kCV5hXT5O2TC7zX0tWFAKXJc11vWwSIBGlGY1gQgbBHhTbxyKseZOA4rO3xBV1BuVu3Q==" />
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>

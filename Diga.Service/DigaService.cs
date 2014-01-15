@@ -32,6 +32,11 @@ namespace Diga.Service
             return logic.GetOptimizationTask(taskKey);
         }
 
+        public IEnumerable<string> GetAllOptimizationTaskKeys()
+        {
+            return logic.GetAllOptimizationTaskKeys();
+        }
+
         public void Migrate(string taskKey, IEnumerable<AbstractSolution> solutions)
         {
             logic.Migrate(taskKey, solutions);
