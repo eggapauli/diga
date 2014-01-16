@@ -25,7 +25,7 @@ namespace Diga.Cloud.WebStatus
         {
             ServicePointManager.DefaultConnectionLimit = 12;
 
-            var endpoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["WCFEndpoint"];
+            var endpoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["DefaultExternalEndpoint"];
             string baseUri = string.Format("{0}://{1}", endpoint.Protocol, endpoint.IPEndpoint);
 
             Trace.TraceInformation(string.Format("Starting OWIN at {0}", baseUri), "Information");

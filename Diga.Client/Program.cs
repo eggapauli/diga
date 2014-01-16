@@ -106,7 +106,7 @@ namespace Diga.Client
         {
             try
             {
-                var taskData = digaService.GetOptimizationTask(taskKey);
+                var taskData = digaService.ApplyForCalculatingOptimizationTask(taskKey);
                 var task = (Domain.OptimizationTask)Svc.Converter.ConvertFromServiceToDomain(taskData);
 
                 Console.WriteLine("Started initializing {0}.", taskKey);

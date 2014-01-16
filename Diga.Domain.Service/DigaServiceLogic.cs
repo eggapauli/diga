@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Diga.Domain.Service
 {
-    public class DigaServiceLogic
+    public class DigaServiceLogic : IDigaService, IDigaStatusService
     {
         private readonly object migrationLocker = new object();
 
@@ -23,7 +23,7 @@ namespace Diga.Domain.Service
             }
         }
 
-        public DataContracts.OptimizationTask GetOptimizationTask(string taskKey)
+        public DataContracts.OptimizationTask ApplyForCalculatingOptimizationTask(string taskKey)
         {
             var task = StateManager.Instance.GetTask(taskKey);
             if (task == null)
@@ -40,11 +40,6 @@ namespace Diga.Domain.Service
             var channel = OperationContext.Current.GetCallbackChannel<IDigaCallback>();
             StateManager.Instance.AddWorker(taskKey, channel);
             return task;
-        }
-
-        public IEnumerable<string> GetAllOptimizationTaskKeys()
-        {
-            return StateManager.Instance.GetAllTaskKeys();
         }
 
         public void Migrate(string taskKey, IEnumerable<AbstractSolution> solutions)
@@ -114,6 +109,20 @@ namespace Diga.Domain.Service
         public async Task ClearResultsAsync()
         {
             await StateManager.Instance.ClearResultsAsync();
+        }
+
+        public DataContracts.OptimizationTask GetOptimizationTask(string taskKey)
+        {
+            var task = StateManager.Instance.GetTask(taskKey);
+            if (task == null) {
+                throw new FaultException<TaskNotFoundFault>(new TaskNotFoundFault());
+            }
+            return task;
+        }
+
+        public IEnumerable<string> GetAllOptimizationTaskKeys()
+        {
+            return StateManager.Instance.GetAllTaskKeys();
         }
     }
 }

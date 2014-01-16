@@ -18,7 +18,7 @@ namespace Diga.Service
 {
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall,
         ConcurrencyMode = ConcurrencyMode.Reentrant)]
-    public class DigaService : IDigaService
+    public class DigaService : IDigaService, IDigaStatusService
     {
         private static DigaServiceLogic logic = new DigaServiceLogic();
 
@@ -27,14 +27,9 @@ namespace Diga.Service
             logic.AddOptimizationTask(taskKey, task);
         }
 
-        public DataContracts.OptimizationTask GetOptimizationTask(string taskKey)
+        public DataContracts.OptimizationTask ApplyForCalculatingOptimizationTask(string taskKey)
         {
             return logic.GetOptimizationTask(taskKey);
-        }
-
-        public IEnumerable<string> GetAllOptimizationTaskKeys()
-        {
-            return logic.GetAllOptimizationTaskKeys();
         }
 
         public void Migrate(string taskKey, IEnumerable<AbstractSolution> solutions)
@@ -55,6 +50,16 @@ namespace Diga.Service
         public async Task ClearResultsAsync()
         {
             await logic.ClearResultsAsync();
+        }
+
+        public DataContracts.OptimizationTask GetOptimizationTask(string taskKey)
+        {
+            return logic.GetOptimizationTask(taskKey);
+        }
+
+        public IEnumerable<string> GetAllOptimizationTaskKeys()
+        {
+            return logic.GetAllOptimizationTaskKeys();
         }
     }
 }

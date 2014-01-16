@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="Contracts\IDigaCallback.cs" />
     <Compile Include="Contracts\IDigaService.cs" />
+    <Compile Include="Contracts\IDigaStatusService.cs" />
     <Compile Include="Converter.cs" />
     <Compile Include="DataContracts\Algorithms\AbstractAlgorithm.cs" />
     <Compile Include="DataContracts\Crossovers\AbstractCrossover.cs" />

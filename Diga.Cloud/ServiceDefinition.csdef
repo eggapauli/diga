@@ -1,32 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ServiceDefinition name="Diga.Cloud" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2013-10.2.2">
-  <WebRole name="Diga.Cloud.Service" vmsize="Small">
-    <Sites>
-      <Site name="Web">
-        <Bindings>
-          <Binding name="Endpoint1" endpointName="WCFEndpoint" />
-        </Bindings>
-      </Site>
-    </Sites>
-    <Endpoints>
-      <InputEndpoint name="WCFEndpoint" protocol="http" port="80" />
-    </Endpoints>
-    <Imports>
-      <Import moduleName="Diagnostics" />
-    </Imports>
-    <LocalResources>
-      <LocalStorage name="Diga.Cloud.Service.svclog" sizeInMB="1000" cleanOnRoleRecycle="false" />
-    </LocalResources>
-    <ConfigurationSettings>
-      <Setting name="StorageConnectionString" />
-    </ConfigurationSettings>
-  </WebRole>
   <WorkerRole name="Diga.Cloud.WebStatus" vmsize="Small">
     <Imports>
       <Import moduleName="Diagnostics" />
     </Imports>
     <Endpoints>
-      <InputEndpoint name="WCFEndpoint" protocol="http" port="8080" />
+      <InputEndpoint name="DefaultExternalEndpoint" protocol="http" port="80" />
     </Endpoints>
+  </WorkerRole>
+  <WorkerRole name="Diga.Cloud.Service" vmsize="Small">
+    <Imports>
+      <Import moduleName="Diagnostics" />
+    </Imports>
+    <Endpoints>
+      <InternalEndpoint name="DefaultInternalEndpoint" protocol="tcp" />
+      <InputEndpoint name="DefaultExternalEndpoint" protocol="http" port="8080" />
+    </Endpoints>
+    <Runtime executionContext="elevated" />
+    <ConfigurationSettings>
+      <Setting name="StorageConnectionString" />
+    </ConfigurationSettings>
   </WorkerRole>
 </ServiceDefinition>

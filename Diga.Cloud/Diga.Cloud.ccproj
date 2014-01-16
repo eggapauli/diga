@@ -39,9 +39,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Diga.Cloud.Service\Diga.Cloud.Service.csproj">
       <Name>Diga.Cloud.Service</Name>
-      <Project>{0d5df746-15e0-464b-9c7a-06da82b10e90}</Project>
+      <Project>{ac238a8f-7c8c-448b-a4be-ab975a153d39}</Project>
       <Private>True</Private>
-      <RoleType>Web</RoleType>
+      <RoleType>Worker</RoleType>
       <RoleName>Diga.Cloud.Service</RoleName>
       <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
     </ProjectReference>
