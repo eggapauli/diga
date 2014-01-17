@@ -22,12 +22,4 @@
       <Setting name="Microsoft.ServiceBus.ConnectionString" />
     </ConfigurationSettings>
   </WorkerRole>
-  <WorkerRole name="Diga.Cloud.Client" vmsize="Small">
-    <Imports>
-      <Import moduleName="Diagnostics" />
-    </Imports>
-    <ConfigurationSettings>
-      <Setting name="Microsoft.ServiceBus.ConnectionString" />
-    </ConfigurationSettings>
-  </WorkerRole>
 </ServiceDefinition>

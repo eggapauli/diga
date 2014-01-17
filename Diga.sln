@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diga.Cloud.WebStatus", "Dig
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diga.Cloud.Service", "Diga.Cloud.Service\Diga.Cloud.Service.csproj", "{AC238A8F-7C8C-448B-A4BE-AB975A153D39}"
 EndProject
+Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "Diga.Cloud.Worker", "Diga.Cloud.Worker\Diga.Cloud.Worker.ccproj", "{50391374-188A-4F2F-B267-FAD8B9C39A8D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{AC238A8F-7C8C-448B-A4BE-AB975A153D39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC238A8F-7C8C-448B-A4BE-AB975A153D39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC238A8F-7C8C-448B-A4BE-AB975A153D39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50391374-188A-4F2F-B267-FAD8B9C39A8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50391374-188A-4F2F-B267-FAD8B9C39A8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50391374-188A-4F2F-B267-FAD8B9C39A8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50391374-188A-4F2F-B267-FAD8B9C39A8D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
