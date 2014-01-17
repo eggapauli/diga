@@ -1,5 +1,6 @@
 ﻿using Diga.Domain.Service.Contracts;
 using Diga.Domain.Service.DataContracts.Solutions;
+using Diga.Domain.Service.Models;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
@@ -19,22 +20,22 @@ namespace Diga.Domain.Service
         private ConcurrentDictionary<string, DataContracts.OptimizationTask> tasks =
             new ConcurrentDictionary<string, DataContracts.OptimizationTask>();
 
-        private ConcurrentDictionary<string, ConcurrentBag<IDigaCallback>> workers =
-            new ConcurrentDictionary<string, ConcurrentBag<IDigaCallback>>();
+        private ConcurrentDictionary<string, ConcurrentBag<IRemoteWorker>> workers =
+            new ConcurrentDictionary<string, ConcurrentBag<IRemoteWorker>>();
 
-        private ConcurrentDictionary<string, ConcurrentDictionary<IDigaCallback, IEnumerable<AbstractSolution>>> migrations =
-            new ConcurrentDictionary<string, ConcurrentDictionary<IDigaCallback, IEnumerable<AbstractSolution>>>();
+        private ConcurrentDictionary<string, ConcurrentDictionary<IRemoteWorker, IEnumerable<AbstractSolution>>> migrations =
+            new ConcurrentDictionary<string, ConcurrentDictionary<IRemoteWorker, IEnumerable<AbstractSolution>>>();
 
         public static StateManager Instance
         {
             get { return instance.Value; }
         }
 
-        public bool AddTask(string key, DataContracts.OptimizationTask task)
+        public bool AddTask(DataContracts.OptimizationTask task)
         {
             task.StartTime = null;
             task.EndTime = null;
-            return tasks.TryAdd(key, task);
+            return tasks.TryAdd(task.TaskKey, task);
         }
 
         public DataContracts.OptimizationTask GetTask(string key)
@@ -62,15 +63,15 @@ namespace Diga.Domain.Service
             return null;
         }
 
-        public void AddWorker(string key, IDigaCallback worker)
+        public void AddWorker(string key, IRemoteWorker worker)
         {
-            var list = workers.GetOrAdd(key, new ConcurrentBag<IDigaCallback>());
+            var list = workers.GetOrAdd(key, new ConcurrentBag<IRemoteWorker>());
             list.Add(worker);
         }
 
-        public IList<IDigaCallback> GetWorkers(string key)
+        public IList<IRemoteWorker> GetWorkers(string key)
         {
-            ConcurrentBag<IDigaCallback> list;
+            ConcurrentBag<IRemoteWorker> list;
             if (workers.TryGetValue(key, out list))
             {
                 return list.ToList();
@@ -78,16 +79,16 @@ namespace Diga.Domain.Service
             return null;
         }
 
-        public void AddMigration(string key, IDigaCallback channel, IEnumerable<AbstractSolution> solutions)
+        public void AddMigration(string key, IRemoteWorker worker, IEnumerable<AbstractSolution> solutions)
         {
-            var list = migrations.GetOrAdd(key, new ConcurrentDictionary<IDigaCallback, IEnumerable<AbstractSolution>>());
-            var isAdded = list.TryAdd(channel, solutions);
+            var list = migrations.GetOrAdd(key, new ConcurrentDictionary<IRemoteWorker, IEnumerable<AbstractSolution>>());
+            var isAdded = list.TryAdd(worker, solutions);
             Debug.Assert(isAdded);
         }
 
-        public IDictionary<IDigaCallback, IEnumerable<AbstractSolution>> GetMigrations(string key)
+        public IDictionary<IRemoteWorker, IEnumerable<AbstractSolution>> GetMigrations(string key)
         {
-            ConcurrentDictionary<IDigaCallback, IEnumerable<AbstractSolution>> list;
+            ConcurrentDictionary<IRemoteWorker, IEnumerable<AbstractSolution>> list;
             if (migrations.TryGetValue(key, out list))
             {
                 return list.ToDictionary(item => item.Key, item => item.Value);
@@ -97,7 +98,7 @@ namespace Diga.Domain.Service
 
         public void ResetMigrations(string key)
         {
-            ConcurrentDictionary<IDigaCallback, IEnumerable<AbstractSolution>> list;
+            ConcurrentDictionary<IRemoteWorker, IEnumerable<AbstractSolution>> list;
             if (migrations.TryGetValue(key, out list))
             {
                 list.Clear();

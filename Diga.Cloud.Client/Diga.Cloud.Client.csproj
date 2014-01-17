@@ -74,6 +74,20 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Diga.Domain.Contracts\Diga.Domain.Contracts.csproj">
+      <Project>{d628086f-4bf2-4f9b-a65d-ba96ad0253f6}</Project>
+      <Name>Diga.Domain.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Diga.Domain.Service\Diga.Domain.Service.csproj">
+      <Project>{1608956a-8703-477e-a273-2008aac9c84e}</Project>
+      <Name>Diga.Domain.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Diga.Domain\Diga.Domain.csproj">
+      <Project>{201a0228-1349-4daf-aaf9-e0a22028c484}</Project>
+      <Name>Diga.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

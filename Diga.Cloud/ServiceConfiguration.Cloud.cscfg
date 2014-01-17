@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ServiceConfiguration serviceName="Diga.Cloud" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="3" osVersion="*" schemaVersion="2013-10.2.2">
-    <Role name="Diga.Cloud.WebStatus">
-        <Instances count="1" />
-        <ConfigurationSettings>
-            <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=digajkarder;AccountKey=AE/rJCSiY0qpyBoAT9kCV5hXT5O2TC7zX0tWFAKXJc11vWwSIBGlGY1gQgbBHhTbxyKseZOA4rO3xBV1BuVu3Q==" />
-        </ConfigurationSettings>
-    </Role>
-    <Role name="Diga.Cloud.Service">
-        <Instances count="1" />
-        <ConfigurationSettings>
-            <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=diga;AccountKey=EBrkJ8kYd8tF9H4lXxXDgzxOWabaLMheK9v8LFF3TIMaJ/hw24bunY5hMDdG1TEXtTWYRboJQEflxS/KmpC2VA==" />
-            <Setting name="StorageConnectionString" value="DefaultEndpointsProtocol=https;AccountName=diga;AccountKey=EBrkJ8kYd8tF9H4lXxXDgzxOWabaLMheK9v8LFF3TIMaJ/hw24bunY5hMDdG1TEXtTWYRboJQEflxS/KmpC2VA==" />
-        </ConfigurationSettings>
-    </Role>
+  <Role name="Diga.Cloud.WebStatus">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=digajkarder;AccountKey=AE/rJCSiY0qpyBoAT9kCV5hXT5O2TC7zX0tWFAKXJc11vWwSIBGlGY1gQgbBHhTbxyKseZOA4rO3xBV1BuVu3Q==" />
+    </ConfigurationSettings>
+  </Role>
+  <Role name="Diga.Cloud.Service">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=diga;AccountKey=EBrkJ8kYd8tF9H4lXxXDgzxOWabaLMheK9v8LFF3TIMaJ/hw24bunY5hMDdG1TEXtTWYRboJQEflxS/KmpC2VA==" />
+      <Setting name="StorageConnectionString" value="DefaultEndpointsProtocol=https;AccountName=diga;AccountKey=EBrkJ8kYd8tF9H4lXxXDgzxOWabaLMheK9v8LFF3TIMaJ/hw24bunY5hMDdG1TEXtTWYRboJQEflxS/KmpC2VA==" />
+      <Setting name="Microsoft.ServiceBus.ConnectionString" value="Endpoint=sb://diga-ns.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=IbjLhblUWYbE6tzqXGpuzNS9h72bRWQgDIwUuBEpHW8=" />
+    </ConfigurationSettings>
+  </Role>
+  <Role name="Diga.Cloud.Client">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="Microsoft.ServiceBus.ConnectionString" value="Endpoint=sb://diga-ns.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=IbjLhblUWYbE6tzqXGpuzNS9h72bRWQgDIwUuBEpHW8=" />
+    </ConfigurationSettings>
+  </Role>
 </ServiceConfiguration>

@@ -12,6 +12,8 @@ namespace Diga.Domain
 {
     public class OptimizationTask : IOptimizationTask
     {
+        public string TaskKey { get; private set; }
+
         public IProblem Problem { get; private set; }
 
         public IAlgorithm Algorithm { get; private set; }
@@ -24,10 +26,11 @@ namespace Diga.Domain
         {
         }
 
-        public OptimizationTask(TSP problem, IslandGA algorithm)
+        public OptimizationTask(string taskKey, TSP problem, IslandGA algorithm)
         {
-            this.Problem = problem;
-            this.Algorithm = algorithm;
+            TaskKey = taskKey;
+            Problem = problem;
+            Algorithm = algorithm;
         }
     }
 }

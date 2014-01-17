@@ -14,14 +14,19 @@ namespace Diga.Cloud.Service
     {
         private static DigaServiceLogic logic = new DigaServiceLogic();
 
-        public void AddOptimizationTask(string taskKey, OptimizationTask task)
+        public void AddOptimizationTask(OptimizationTask task)
         {
-            logic.AddOptimizationTask(taskKey, task);
+            logic.AddOptimizationTask(task);
         }
 
-        public OptimizationTask ApplyForCalculatingOptimizationTask(string taskKey)
+        public void ApplyForCalculatingOptimizationTask(string taskKey)
         {
-            return logic.ApplyForCalculatingOptimizationTask(taskKey);
+            logic.ApplyForCalculatingOptimizationTask(taskKey);
+        }
+
+        public void StartOptimizationTask(string taskKey)
+        {
+            logic.StartOptimizationTask(taskKey);
         }
 
         public void Migrate(string taskKey, IEnumerable<AbstractSolution> solutions)

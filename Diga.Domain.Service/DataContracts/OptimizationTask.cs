@@ -9,6 +9,9 @@ namespace Diga.Domain.Service.DataContracts
     public class OptimizationTask
     {
         [DataMember]
+        public string TaskKey { get; set; }
+
+        [DataMember]
         public AbstractProblem Problem { get; set; }
 
         [DataMember]

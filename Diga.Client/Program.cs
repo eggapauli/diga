@@ -30,6 +30,7 @@ namespace Diga.Client
                 var actions = new List<KeyValuePair<string, Action>> {
                     new KeyValuePair<string, Action>("Add sample problem", () => AddSampleProblem(digaService, sampleProblemTaskKey)),
                     new KeyValuePair<string, Action>("Participate in solving a sample problem", () => SolveSampleProblemAsync(digaService, digaCallback, sampleProblemTaskKey).Wait()),
+                    new KeyValuePair<string, Action>("Start calculation", () => StartCalculation(digaService, sampleProblemTaskKey)),
                     new KeyValuePair<string, Action>("Start clients to solve a sample problem", () => StartClients()),
                     new KeyValuePair<string, Action>("Retrieve the best solution of a sample problem", () => ShowSampleProblemSolutionAsync(digaService, sampleProblemTaskKey).Wait()),
                     new KeyValuePair<string, Action>("Clear results", () => ClearSampleProblemResultAsync(digaService).Wait()),
@@ -67,6 +68,19 @@ namespace Diga.Client
             }
         }
 
+        private static void StartCalculation(IDigaService digaService, string sampleProblemTaskKey)
+        {
+            try {
+                digaService.StartOptimizationTask(sampleProblemTaskKey);
+            }
+            catch (FaultException<TaskNotFoundFault>) {
+                Console.Error.WriteLine("The task couldn't be found.");
+            }
+            catch (FaultException<TaskFinishedFault>) {
+                Console.Error.WriteLine("The task has already been finished.");
+            }
+        }
+
         private static void AddSampleProblem(IDigaService digaService, string taskKey)
         {
             var parameters = new Domain.Parameters.IslandGAParameters(
@@ -88,12 +102,12 @@ namespace Diga.Client
                 solutionCreator: new Domain.SolutionCreators.RandomTSPSolutionCreator()
             );
 
-            var task = new Domain.OptimizationTask(new Domain.Problems.TSP("ch130"), new Domain.Algorithms.IslandGA(parameters));
+            var task = new Domain.OptimizationTask(sampleProblemTaskKey, new Domain.Problems.TSP("ch130"), new Domain.Algorithms.IslandGA(parameters));
 
             var serviceTask = (Svc.DataContracts.OptimizationTask)Svc.Converter.ConvertFromDomainToService(task);
             try
             {
-                digaService.AddOptimizationTask(taskKey, serviceTask);
+                digaService.AddOptimizationTask(serviceTask);
                 Console.WriteLine("The task has been added.");
             }
             catch (FaultException<TaskNotAddedFault>)
@@ -106,7 +120,8 @@ namespace Diga.Client
         {
             try
             {
-                var taskData = digaService.ApplyForCalculatingOptimizationTask(taskKey);
+                digaService.ApplyForCalculatingOptimizationTask(taskKey);
+                var taskData = await digaCallback.WaitForStartAsync();
                 var task = (Domain.OptimizationTask)Svc.Converter.ConvertFromServiceToDomain(taskData);
 
                 Console.WriteLine("Started initializing {0}.", taskKey);

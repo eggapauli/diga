@@ -12,12 +12,17 @@ namespace Diga.Domain.Service.Contracts
     {
         [OperationContract]
         [FaultContract(typeof(TaskNotAddedFault))]
-        void AddOptimizationTask(string taskKey, OptimizationTask task);
+        void AddOptimizationTask(OptimizationTask task);
 
         [OperationContract]
         [FaultContract(typeof(TaskNotFoundFault))]
         [FaultContract(typeof(TaskFinishedFault))]
-        OptimizationTask ApplyForCalculatingOptimizationTask(string taskKey);
+        void ApplyForCalculatingOptimizationTask(string taskKey);
+
+        [OperationContract]
+        [FaultContract(typeof(TaskNotFoundFault))]
+        [FaultContract(typeof(TaskFinishedFault))]
+        void StartOptimizationTask(string taskKey);
 
         [OperationContract]
         [FaultContract(typeof(TaskNotFoundFault))]

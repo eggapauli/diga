@@ -1,4 +1,5 @@
 ﻿using Diga.Domain.Service.Contracts;
+using Diga.Domain.Service.DataContracts;
 using Diga.Domain.Service.DataContracts.Solutions;
 using System.Collections.Generic;
 using System.Threading;
@@ -8,17 +9,30 @@ namespace Diga.Client
 {
     public class DigaCallback : IDigaCallback
     {
-        private TaskCompletionSource<IEnumerable<AbstractSolution>> tcs;
+        private TaskCompletionSource<OptimizationTask> tcsStart;
+        private TaskCompletionSource<IEnumerable<AbstractSolution>> tcsMigrate;
+
+        public void StartWork(OptimizationTask task)
+        {
+            tcsStart.SetResult(task);
+        }
 
         public void Migrate(IEnumerable<AbstractSolution> iterationData)
         {
-            tcs.SetResult(iterationData);
+            tcsMigrate.SetResult(iterationData);
+        }
+
+        public Task<OptimizationTask> WaitForStartAsync()
+        {
+            tcsStart = new TaskCompletionSource<OptimizationTask>();
+            return tcsStart.Task;
         }
 
         public Task<IEnumerable<AbstractSolution>> WaitForMigrationAsync()
         {
-            tcs = new TaskCompletionSource<IEnumerable<AbstractSolution>>();
-            return tcs.Task;
+            tcsMigrate = new TaskCompletionSource<IEnumerable<AbstractSolution>>();
+            return tcsMigrate.Task;
         }
+
     }
 }

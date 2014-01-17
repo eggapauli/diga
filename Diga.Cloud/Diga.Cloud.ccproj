@@ -37,6 +37,14 @@
     <ServiceConfiguration Include="ServiceConfiguration.Cloud.cscfg" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Diga.Cloud.Client\Diga.Cloud.Client.csproj">
+      <Name>Diga.Cloud.Client</Name>
+      <Project>{4f700b24-a92e-470e-8f99-56b9843cd53d}</Project>
+      <Private>True</Private>
+      <RoleType>Worker</RoleType>
+      <RoleName>Diga.Cloud.Client</RoleName>
+      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
+    </ProjectReference>
     <ProjectReference Include="..\Diga.Cloud.Service\Diga.Cloud.Service.csproj">
       <Name>Diga.Cloud.Service</Name>
       <Project>{ac238a8f-7c8c-448b-a4be-ab975a153d39}</Project>
