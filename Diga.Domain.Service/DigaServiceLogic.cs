@@ -19,26 +19,33 @@ namespace Diga.Domain.Service
     public class DigaServiceLogic : IDigaService, IDigaStatusService
     {
         private static readonly string serviceToWorkerQueueName = "work";
-        private readonly QueueClient serviceToWorkerQueue;
+        private QueueClient serviceToWorkerQueue;
 
         private static readonly string workerToServiceQueueName = "results";
-        private readonly QueueClient workerToServiceQueue;
+        private QueueClient workerToServiceQueue;
 
         private readonly object migrationLocker = new object();
 
         public DigaServiceLogic()
         {
+            InitQueues();
+        }
+
+        private void InitQueues()
+        {
             string connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
             var namespaceManager = NamespaceManager.CreateFromConnectionString(connectionString);
 
-            if (!namespaceManager.QueueExists(serviceToWorkerQueueName)) {
-                namespaceManager.CreateQueue(serviceToWorkerQueueName);
+            if (namespaceManager.QueueExists(serviceToWorkerQueueName)) {
+                namespaceManager.DeleteQueue(serviceToWorkerQueueName);
             }
+            namespaceManager.CreateQueue(serviceToWorkerQueueName);
             serviceToWorkerQueue = QueueClient.CreateFromConnectionString(connectionString, serviceToWorkerQueueName);
 
-            if (!namespaceManager.QueueExists(workerToServiceQueueName)) {
-                namespaceManager.CreateQueue(workerToServiceQueueName);
+            if (namespaceManager.QueueExists(workerToServiceQueueName)) {
+                namespaceManager.DeleteQueue(workerToServiceQueueName);
             }
+            namespaceManager.CreateQueue(workerToServiceQueueName);
             workerToServiceQueue = QueueClient.CreateFromConnectionString(connectionString, workerToServiceQueueName);
 
             workerToServiceQueue.OnMessageAsync(async message => {
@@ -175,6 +182,8 @@ namespace Diga.Domain.Service
         public async Task ClearResultsAsync()
         {
             await StateManager.Instance.ClearResultsAsync();
+
+            InitQueues();
         }
 
         public DataContracts.OptimizationTask GetOptimizationTask(string taskKey)
