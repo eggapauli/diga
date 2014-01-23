@@ -62,14 +62,9 @@ namespace Diga.Domain.Service
                     Migrate(taskKey, solutions, worker);
                 }
                 else if (type == "Result") {
-                    try {
-                        var serializer = new DataContractSerializer(typeof(AbstractSolution));
-                        var solution = message.GetBody<AbstractSolution>(serializer);
-                        await SetResultAsync(taskKey, solution);
-                    }
-                    catch (Exception e) {
-
-                    }
+                    var serializer = new DataContractSerializer(typeof(AbstractSolution));
+                    var solution = message.GetBody<AbstractSolution>(serializer);
+                    await SetResultAsync(taskKey, solution);
                 }
                 else {
                     throw new NotSupportedException("Invalid message type " + type);
